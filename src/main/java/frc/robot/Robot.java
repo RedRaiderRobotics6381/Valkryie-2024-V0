@@ -12,15 +12,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-<<<<<<< HEAD
-//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AprilTagConstants;
-//import frc.robot.commands.Vision.DriveToAprilTagPosCmd;
-import frc.robot.subsystems.Secondary.ArmRotateSubsystem;
 import frc.robot.subsystems.Secondary.Climber;
-=======
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
->>>>>>> pr/1
 
 import java.io.File;
 import java.io.IOException;
@@ -175,22 +169,11 @@ public class Robot extends TimedRobot
     }
     m_robotContainer.setDriveMode();
     //m_robotContainer.setMotorBrake(true);
-<<<<<<< HEAD
-    ArmRotateSubsystem.ArmRotateSetpoint = 90;
 
+    LauncherRotateSubsystem.LauncherRotateSetpoint = 90;
     camera.setDriverMode(false);
     camera.setLED(VisionLEDMode.kDefault);
     camera.setPipelineIndex(0);
-
-    // LimelightHelpers.setCameraMode_Processor("null");
-    // LimelightHelpers.setLEDMode_ForceOn("");
-    // LimelightHelpers.setPipelineIndex("",0);
-=======
-    LauncherRotateSubsystem.LauncherRotateSetpoint = 90;
-    LimelightHelpers.setCameraMode_Processor("null");
-    LimelightHelpers.setLEDMode_ForceOn("");
-    LimelightHelpers.setPipelineIndex("",0);
->>>>>>> pr/1
   }
 
   /**
@@ -199,8 +182,6 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
-<<<<<<< HEAD
-<<<<<<< HEAD
     // if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
     //   ArmRotateSubsystem.m_armPIDController.setReference((ArmRotateSubsystem.ArmEncoder.getPosition()) +
     //                                                     (RobotContainer.engineerXbox.getRightY() * 20),
@@ -228,16 +209,14 @@ public class Robot extends TimedRobot
       //drivebase.maximumSpeed = Units.feetToMeters(10.875);
       //Constants.Drivebase.Max_Speed_Multiplier = 0.5;
       Constants.Drivebase.Max_Speed = 10.875;
-=======
+    }
+
    /*  if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
       Climber.m_climberPIDController.setReference((Climber.ClimberEncoder.getPosition()) +
-=======
     if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
       LauncherRotateSubsystem.m_LauncherRotatePIDController.setReference((LauncherRotateSubsystem.LauncherRotateEncoder.getPosition()) +
->>>>>>> pr/1
                                                         (RobotContainer.engineerXbox.getRightY() * 20),
                                                         CANSparkMax.ControlType.kSmartMotion);                                                   
->>>>>>> pr/2
     }
     */
     if (RobotContainer.engineerXbox.getRawButtonPressed(2)) {

@@ -52,15 +52,12 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.05;
     public static final double TURN_CONSTANT    = 6;
   }
-  
-<<<<<<< HEAD
   public static final class ClimberConstants {
     //TODO Change Motor IDs
     public static final int kClimberRotateMotor1 = 13;
     public static final int kClimberRotateMotor2 = 13;
-    
-=======
-  public static final class LauncherConstants {
+  }
+    public static final class LauncherConstants {
     public static final int kLauncherL = 14;
     public static final int kLauncherR = 15;
     public static final int kLauncherRotate = 16;
@@ -83,7 +80,6 @@ public final class Constants
     public static final double ENCODER_COUNTS_PER_REV = 42.0;
     public static final double DEGREES_PER_TICK = 360 / ENCODER_COUNTS_PER_REV;
     public static final double Camera1_pitch = Math.PI / 9;
->>>>>>> pr/1
   }
 
   public static final class AprilTagConstants {
