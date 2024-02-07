@@ -62,9 +62,6 @@ public final class Constants
     public static final int kLauncherR = 15;
     public static final int kLauncherRotate = 16;
 
-    public static final double intakeSpeedOut = 1.00;
-    public static final double intakeSpeedIn = 0.50;
-    public static final double intakeSpeedHold = 0.062;
     public static final double posOffset = 45;
     public static final double posOuttake = 190; //Was 200 see note in ArmRotateSubsystem.java
     public static final double posDefault = 60; //Was 132.5 see note in ArmRotateSubsystem.java
