@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -62,7 +63,20 @@ public class IntakeSubsystem extends SubsystemBase {
     
     public Command IntakeCmd() {
         // implicitly require `this`
+<<<<<<< HEAD
         return this.runOnce(() -> intakePIDController.setReference(5000,CANSparkMax.ControlType.kSmartVelocity,0));// intakeMotor.set(0.5));
+=======
+        return this.runOnce(() -> {
+            intakeMotor.set(0.5);
+            indexerMotor.set(0.5);
+            if (Robot.sensorIntake.get() == true  && Robot.sensorOuttake.get() == true){
+                intakeMotor.set(0);
+                indexerMotor.set(0);
+                LEDs.setLED(.65);
+            }
+        });
+
+>>>>>>> 7ddf9e7770a2727e573015e49c6915742fa4cd9e
         //set to final speed once tested
         
     }
