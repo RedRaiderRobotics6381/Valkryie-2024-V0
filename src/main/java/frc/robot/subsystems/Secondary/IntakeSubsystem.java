@@ -63,9 +63,6 @@ public class IntakeSubsystem extends SubsystemBase {
     
     public Command IntakeCmd() {
         // implicitly require `this`
-<<<<<<< HEAD
-        return this.runOnce(() -> intakePIDController.setReference(5000,CANSparkMax.ControlType.kSmartVelocity,0));// intakeMotor.set(0.5));
-=======
         return this.runOnce(() -> {
             intakeMotor.set(0.5);
             indexerMotor.set(0.5);
@@ -76,7 +73,6 @@ public class IntakeSubsystem extends SubsystemBase {
             }
         });
 
->>>>>>> 7ddf9e7770a2727e573015e49c6915742fa4cd9e
         //set to final speed once tested
         
     }
