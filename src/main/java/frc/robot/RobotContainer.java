@@ -41,7 +41,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import frc.robot.subsystems.Secondary.PhotonVision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -89,26 +88,6 @@ public class RobotContainer
     
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    // AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-    //                                                                () -> MathUtil.applyDeadband(-driverXbox.getLeftY(),
-    //                                                                                             OperatorConstants.LEFT_Y_DEADBAND),
-    //                                                                () -> MathUtil.applyDeadband(-driverXbox.getLeftX(),
-    //                                                                                             OperatorConstants.LEFT_X_DEADBAND),
-    //                                                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
-    //                                                                                             OperatorConstants.RIGHT_X_DEADBAND),
-    //                                                                driverXbox.getPOV());
-
-    // // Applies deadbands and inverts controls because joysticks
-    // // are back-right positive while robot
-    // // controls are front-left positive
-    // // left stick controls translation
-    // // right stick controls the desired angle NOT angular rotation
-    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-    //     () -> driverXbox.getRightX(),
-    //     () -> driverXbox.getRightY());
-
     // Applies deadbands and inverts controls because joysticks
     // are back-right positive while robot
     // controls are front-left positive
@@ -123,16 +102,6 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),// * Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),// * Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND));// * Constants.Drivebase.Max_Speed_Multiplier);
-
-    // AbsoluteFieldDriveAng closedFieldAbsoluteDriveAng = new AbsoluteFieldDriveAng(drivebase,
-    //                                                                   () ->
-    //                                                                       MathUtil.applyDeadband(-driverXbox.getLeftY(),
-    //                                                                                             OperatorConstants.LEFT_Y_DEADBAND),
-    //                                                                   () -> MathUtil.applyDeadband(-driverXbox.getLeftX(),
-    //                                                                                               OperatorConstants.LEFT_X_DEADBAND),
-    //                                                                   () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
-    //                                                                                               OperatorConstants.RIGHT_X_DEADBAND));
-
 
     drivebase.setDefaultCommand(
         !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
@@ -183,22 +152,6 @@ public class RobotContainer
     new JoystickButton(engineerXbox,2 ).whileTrue(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedOut));
     new JoystickButton(engineerXbox, 2).onFalse(LauncherSubsystem.ArmIntakeCmd(0));
 
-    
-      
-
-    //new JoystickButton(engineerXbox,7 ).whileTrue(new DriveGyro180Cmd(swerveSubsystem));
-
-    // new JoystickButton(driverXbox, 5).whileTrue(new LLDriveToObjectCmd(drivebase, 0));
-    // new JoystickButton(driverXbox, 5).whileTrue(new LLDriveToAprilTagPosCmd(drivebase, 0, 7));
-    // new JoystickButton(driverXbox, 6).whileTrue(new LLDriveToAprilTagPosCmd(drivebase, 0, 7));
-    // new JoystickButton(driverXbox, 5).whileTrue(new DriveToAprilTagPosCmd(photonCamera,
-    //                                                                                    drivebase,
-    //                                                                                    poseProvider,
-    //                                                                                    0,
-    //                                                                                    11,
-    //                                                                                    60.0,
-    //                                                                                    0.0,
-    //                                                                                    0.0));
     new JoystickButton(driverXbox, 7).whileTrue(new DriveToAprilTagPosCmd(photonCamera,
                                                                                        drivebase,
                                                                                        0,
