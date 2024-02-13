@@ -39,7 +39,6 @@ public final class Constants
     // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10;
     public static double Max_Speed_Multiplier = 0.5;
-    public static double Max_Speed = 7.25;//14.5;
   }
 
   public static class OperatorConstants
@@ -52,13 +51,12 @@ public final class Constants
     public static final double TURN_CONSTANT    = 6;
   }
   public static final class ClimberConstants {
-    //TODO Change Motor IDs
-    public static final int kClimberRotateMotor1 = 13;
-    public static final int kClimberRotateMotor2 = 13;
+    public static final int kClimberMotorL = 20;
+    public static final int kClimberMotorR = 21;
   }
     public static final class LauncherConstants {
-    public static final int kLauncherL = 14;
-    public static final int kLauncherR = 15;
+    public static final int kLauncherT = 18;
+    public static final int kLauncherB = 19;
     public static final int kLauncherRotate = 16;
 
     public static final double posOffset = 45;
@@ -87,9 +85,9 @@ public final class Constants
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotor = 0; //need to change
-    public static final int kIndexerMotor = 0; //need to change
-    public static final int kLauncherIndexerMotor = 0; //need to change
+    public static final int kIntakeMotor = 14; //need to change
+    public static final int kIndexerMotor = 15; //need to change
+    public static final int kLauncherIndexerMotor = 17; //need to change
     
   }
 

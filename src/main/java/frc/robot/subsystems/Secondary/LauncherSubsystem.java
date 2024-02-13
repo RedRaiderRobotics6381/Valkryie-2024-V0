@@ -9,18 +9,19 @@ import frc.robot.Constants;
 
 public class LauncherSubsystem extends SubsystemBase {
 
-    public CANSparkMax LauncherMotorMaster;
-    public CANSparkMax LauncherMotorFollower;
+    public CANSparkMax LauncherMotorTop;
+    public CANSparkMax LauncherMotorBot;
 
     public LauncherSubsystem() {
-        LauncherMotorMaster =  new CANSparkMax(Constants.LauncherConstants.kLauncherL, MotorType.kBrushless);
-        LauncherMotorFollower =  new CANSparkMax(Constants.LauncherConstants.kLauncherR, MotorType.kBrushless);
-        LauncherMotorFollower.follow(LauncherMotorMaster, true);
+        LauncherMotorTop =  new CANSparkMax(Constants.LauncherConstants.kLauncherT, MotorType.kBrushless);
+        LauncherMotorBot =  new CANSparkMax(Constants.LauncherConstants.kLauncherB, MotorType.kBrushless);
+
+        LauncherMotorBot.follow(LauncherMotorTop, true);
     }
     
     public Command LauncherCmd() {
         // implicitly require `this`
-        return this.runOnce(() -> LauncherMotorMaster.set(1)); //needs to change
+        return this.runOnce(() -> LauncherMotorTop.set(ArmIntakeSetpoint));
         
         //armSubsystem.intakeMotorR.set(Constants.ArmConstants.gIntakeSpeed););
     }
