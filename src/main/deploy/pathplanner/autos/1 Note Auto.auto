@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 1.9,
+      "y": 7.0
     },
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Part1"
+            "pathName": "Shoot 1st Note"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Part2"
+            "name": "Shoot"
           }
         }
       ]

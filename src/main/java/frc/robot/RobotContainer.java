@@ -66,8 +66,6 @@ public class RobotContainer
 
     NamedCommands.registerCommand("Intake", IntakeSubsystem.IntakeCmd());
     NamedCommands.registerCommand("Shoot", LauncherSubsystem.LauncherCmd());
-    NamedCommands.registerCommand("Aim", LauncherRotateSubsystem.rotatePosCommand(9));
-    //NamedCommands.registerCommand("Point to Speaker", new PointToAprilTagCmd(drivebase, 1, Constants.AprilTagConstants.speakerID));
 
 
     // Build an auto chooser. This will use Commands.none() as the default option.
