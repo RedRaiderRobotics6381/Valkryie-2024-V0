@@ -15,8 +15,8 @@ import frc.robot.Constants.ClimberConstants;
 
 
 public class Climber extends SubsystemBase{
-    public static CANSparkMax m_climberMotorRight;
-    public static CANSparkMax m_climberMotorLeft;
+    public static CANSparkMax m_climberMotorL;  
+    public static CANSparkMax m_climberMotorR;
     public static RelativeEncoder m_climberEncoder;
     public static ProfiledPIDController m_climberPIDController;
     //public static Encoder ClimberEncoder;
@@ -38,14 +38,13 @@ public class Climber extends SubsystemBase{
     */
     public Climber(){
         // Declare the motors
-        //TODO set motor ID
         //ClimberEncoder = new Encoder(1, 2);
-        m_climberMotorRight = new CANSparkMax(ClimberConstants.kClimberRotateMotor1, MotorType.kBrushless);
-        m_climberMotorLeft = new CANSparkMax(ClimberConstants.kClimberRotateMotor2, MotorType.kBrushless);
-        m_climberEncoder = m_climberMotorRight.getEncoder();
+        m_climberMotorR = new CANSparkMax(ClimberConstants.kClimberMotorR, MotorType.kBrushless);
+        m_climberMotorL = new CANSparkMax(ClimberConstants.kClimberMotorL, MotorType.kBrushless);
+        m_climberEncoder = m_climberMotorR.getEncoder();
         m_climberFF = new ElevatorFeedforward(kS, kG, kV);
-        m_climberMotorLeft.setInverted(true);
-        m_climberMotorLeft.follow(m_climberMotorRight);
+        m_climberMotorL.setInverted(true);
+        m_climberMotorL.follow(m_climberMotorR);
         m_climberPIDController = new ProfiledPIDController(kP, kI, kD, m_constraints, kDt);
 
         /**
@@ -53,7 +52,7 @@ public class Climber extends SubsystemBase{
          * in the SPARK MAX to their factory default state. If no argument is passed, these
          * parameters will not persist between power cycles
          */
-        m_climberMotorRight.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
+        m_climberMotorR.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
         // ClimberEncoder = m_climberMotorRight.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         // ClimberEncoder.setPositionConversionFactor(360);
         // ClimberEncoder.setZeroOffset(72.5);
@@ -63,13 +62,13 @@ public class Climber extends SubsystemBase{
 
         // m_climberPIDController = m_climberMotorRight.getPIDController();
         // m_climberPIDController.setFeedbackDevice(ClimberEncoder);
-        m_climberMotorRight.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-        m_climberMotorRight.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
-        m_climberMotorRight.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 0); //TODO change this value
-        m_climberMotorRight.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);//TODO change this value
-        m_climberMotorRight.enableVoltageCompensation(12.0);
-        m_climberMotorRight.setSmartCurrentLimit(25);
-        m_climberMotorRight.burnFlash(); //Remove this after everything is up and running to save flash wear
+        m_climberMotorR.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+        m_climberMotorR.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+        m_climberMotorR.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 0); //TODO change this value
+        m_climberMotorR.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);//TODO change this value
+        m_climberMotorR.enableVoltageCompensation(12.0);
+        m_climberMotorR.setSmartCurrentLimit(25);
+        m_climberMotorR.burnFlash(); //Remove this after everything is up and running to save flash wear
 
 
         // set PID coefficients
@@ -111,7 +110,7 @@ public class Climber extends SubsystemBase{
     // implicitly require `this`
     m_climberPIDController.setGoal(ClimberHeightPos);
 
-    m_climberMotorRight.setVoltage(
+    m_climberMotorR.setVoltage(
         m_climberPIDController.calculate(m_climberEncoder.getPosition())
             + m_climberFF.calculate(m_climberPIDController.getSetpoint().velocity));
   }
