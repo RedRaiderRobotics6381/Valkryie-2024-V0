@@ -5,7 +5,8 @@
 package frc.robot.subsystems.Secondary;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.MotorFeedbackSensor;
+//import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -13,7 +14,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 //import frc.robot.Constants;
 //import frc.robot.RobotContainer;
 import frc.robot.Constants.LauncherConstants;
-import frc.robot.commands.Vision.PVAim;
+//import frc.robot.commands.Vision.PVAim;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +23,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LauncherRotateSubsystem extends SubsystemBase {
   public static CANSparkMax m_LauncherRotateMotor;
   public static SparkPIDController m_LauncherRotatePIDController;
-  public static SparkAbsoluteEncoder LauncherRotateEncoder;
+  //public static SparkAbsoluteEncoder LauncherRotateEncoder;
+  public static DutyCycleEncoder m_LauncherRotateEncoder;
   public static double LauncherRotateSetpoint;
   public static double RotateManualPos;
   
@@ -32,6 +35,10 @@ public class LauncherRotateSubsystem extends SubsystemBase {
   public LauncherRotateSubsystem() {
         // initialize motor
         m_LauncherRotateMotor = new CANSparkMax(LauncherConstants.kLauncherRotate, MotorType.kBrushless);
+        DutyCycleEncoder m_LauncherRotateEncoder = new DutyCycleEncoder(2);
+        m_LauncherRotateEncoder.setDistancePerRotation(360);
+        m_LauncherRotateEncoder.setPositionOffset(72.5);
+
         
         /**
          * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -39,14 +46,15 @@ public class LauncherRotateSubsystem extends SubsystemBase {
          * parameters will not persist between power cycles
          */
         m_LauncherRotateMotor.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
-        LauncherRotateEncoder = m_LauncherRotateMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-        LauncherRotateEncoder.setPositionConversionFactor(360);
-        LauncherRotateEncoder.setZeroOffset(72.5); //ArmConstants.posOffset);
+        //LauncherRotateEncoder = m_LauncherRotateMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        //LauncherRotateEncoder.setPositionConversionFactor(360);
+        //LauncherRotateEncoder.setZeroOffset(72.5); //ArmConstants.posOffset);
         //m_armEncoder.setInverted(true);
     
         // initialze PID controller and encoder objects
         m_LauncherRotatePIDController = m_LauncherRotateMotor.getPIDController();
-        m_LauncherRotatePIDController.setFeedbackDevice(LauncherRotateEncoder);
+        //m_LauncherRotatePIDController.setFeedbackDevice(LauncherRotateEncoder);
+        m_LauncherRotatePIDController.setFeedbackDevice((MotorFeedbackSensor) m_LauncherRotateEncoder);
         m_LauncherRotateMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 85); //ArmConstants.posLowerLimit
         m_LauncherRotateMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241); //ArmConstants.posUpperLimit); 
         m_LauncherRotateMotor.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
@@ -93,15 +101,15 @@ public class LauncherRotateSubsystem extends SubsystemBase {
  @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Arm Enc Val", LauncherRotateEncoder.getPosition());
+    SmartDashboard.putNumber("Arm Enc Val", m_LauncherRotateEncoder.getAbsolutePosition());
   }
 
 
   
-  public Command rotateAutoPosCommand() {
-    // implicitly require `this`
-    return this.runOnce(() -> m_LauncherRotatePIDController.setReference(PVAim.Launcher_Pitch, CANSparkMax.ControlType.kSmartMotion));
-  }
+  // public Command rotateAutoPosCommand() {
+  //   // implicitly require `this`
+  //   return this.runOnce(() -> m_LauncherRotatePIDController.setReference(PVAim.Launcher_Pitch, CANSparkMax.ControlType.kSmartMotion));
+  // }
   
   public Command rotatePosCommand(double LauncherRotateSetpoint) {
     // implicitly require `this`

@@ -1,44 +1,40 @@
 package frc.robot.commands.Vision;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonTrackedTarget;
-//import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-//import edu.wpi.first.math.kinematics.ChassisSpeeds;
-//import edu.wpi.first.networktables.NetworkTableEntry;
-//import edu.wpi.first.networktables.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
-
-
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.Secondary.IntakeSubsystem;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class DriveToObjectCmd extends Command
 {
-
   private final SwerveSubsystem swerveSubsystem;
   private final PIDController   xController;
   private final PIDController   yController;
-  private double visionObject;
-  PhotonCamera camera = new PhotonCamera("photonvision");
+  private final PIDController   zController;
+  private boolean hasTargets;
+  private boolean hasNote;
 
-  public DriveToObjectCmd(SwerveSubsystem swerveSubsystem, double visionObject)
+
+  public DriveToObjectCmd(SwerveSubsystem swerveSubsystem)
   {
     this.swerveSubsystem = swerveSubsystem;
+    xController = new PIDController(0.055, 0.00, 0.0);
+    //xController = new PIDController(0.0625, 0.00375, 0.2);
     yController = new PIDController(0.0625, 0.00375, 0.0001);
-    yController.setTolerance(1);
-    yController.setSetpoint(0.0);
-    xController = new PIDController(.25, 0.01, 0.0001);
+    zController = new PIDController(0.025,0.0, 0.000);
     xController.setTolerance(1);
-    xController.setSetpoint(1.0);
+    yController.setTolerance(1);
+    zController.setTolerance(.5);
+
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
     addRequirements(this.swerveSubsystem);
-    this.visionObject = visionObject;
   }
 
   /**
@@ -47,10 +43,6 @@ public class DriveToObjectCmd extends Command
   @Override
   public void initialize()
   {
-    camera.setLED(VisionLEDMode.kOn);
-    camera.setPipelineIndex((int)visionObject);
-    camera.setDriverMode(false);
-
   }
 
   /**
@@ -60,37 +52,30 @@ public class DriveToObjectCmd extends Command
   @Override
   public void execute()
   {
-    var result = camera.getLatestResult();  // Get the latest result from PhotonVision
-    boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
+    var result = Robot.camObj.getLatestResult();  // Get the latest result from PhotonVision
+    hasTargets = result.hasTargets(); // Check if the latest result has any targets.
     PhotonTrackedTarget target = result.getBestTarget();
-    //int targetID = result.
     
-    while (hasTargets == true) {
-      RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-      Double TX = target.getYaw();
-      SmartDashboard.putString("PhotoVision Target", "True");
-      SmartDashboard.putNumber("PhotonVision Yaw", TX);
-      Double translationValY = yController.calculate(TX, 0);
-      SmartDashboard.putNumber("TranslationY", translationValY);
+    if (hasTargets == true && RobotContainer.driverXbox.getRawButton(2) == true) {
+      double TZ = target.getYaw();
+      double TX = target.getPitch();
 
-      if (visionObject == 0) {
-          RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-          swerveSubsystem.drive(new Translation2d(0.0, translationValY * RobotContainer.driverXbox.getLeftTriggerAxis()),
-                                            0,
-                                            false);
-        }
+      double translationValx = MathUtil.clamp(xController.calculate(TX, -18), -1.0 , 1.0); //Tune the setpoint to be where the note is just barely found.
+      double translationValz = MathUtil.clamp(zController.calculate(TZ, 0.0), -2.0 , 2.0); //* throttle, 2.5 * throttle);
 
-      if (visionObject == 1) {
-          RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kRightRumble, 0.25);
-          swerveSubsystem.drive(new Translation2d(0.0, translationValY * RobotContainer.driverXbox.getRightTriggerAxis()),
-                                            0,
-                                            false);
-        }
+      if (xController.atSetpoint() != true) {
+        swerveSubsystem.drive(new Translation2d(translationValx, 0.0),
+        translationValz,
+        false);
+        new IntakeSubsystem().IntakeCmd();
+      } //else{
+        //swerveSubsystem.getPose();
+        //  swerveSubsystem.driveToPose(new Pose2d(new Translation2d(.25, 0), Rotation2d.fromDegrees(0)));
+        //}
+      hasNote = Robot.sensorIntake.get();
+    } else{
+      //swerveSubsystem.lock();
     }
-    
-      // double translationVal = MathUtil.clamp(controller.calculate(swerveSubsystem.getPitch().getDegrees(), 0.0), -0.5,
-    //                                        0.5);
-    // swerveSubsystem.drive(new Translation2d(translationVal, 0.0), 0.0, true, false);
   }
 
   /**
@@ -109,7 +94,8 @@ public class DriveToObjectCmd extends Command
   @Override
   public boolean isFinished()
   {
-    return xController.atSetpoint() && yController.atSetpoint();
+    return hasNote;  //Try this to see if we can use it as an end.  If the note is not intaked first we will probably need to add a drive to pose.
+    //return xController.atSetpoint();// && yController.atSetpoint();
   }
 
   /**
@@ -122,7 +108,7 @@ public class DriveToObjectCmd extends Command
   @Override
   public void end(boolean interrupted)
   {
-    //swerveSubsystem.lock();
     RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kBothRumble, 0);
+    swerveSubsystem.lock();
   }
 }

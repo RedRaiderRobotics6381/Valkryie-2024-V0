@@ -4,27 +4,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.AprilTagConstants;
 import frc.robot.subsystems.Secondary.Climber;
+import frc.robot.subsystems.Secondary.LEDs;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-
 import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
-
-//import com.revrobotics.CANSparkMax;
-
 import swervelib.parser.SwerveParser;
 
 /**
@@ -41,7 +37,13 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
-  PhotonCamera camera = new PhotonCamera("photonvision");
+  
+  public static PhotonCamera camObj = new PhotonCamera("camObj");
+  public static PhotonCamera camAprTgLow = new PhotonCamera("camAprTgLow");
+  public static PhotonCamera camAprTgHigh = new PhotonCamera("camAprTgHigh");
+   
+  public static DigitalInput sensorIntake = new DigitalInput(0); //This is the lower sensor, it will be true when a note is first intaked
+  public static DigitalInput sensorOuttake = new DigitalInput(1); //This is the upper sensor, it will be true when a note is ready for outtake
 
   public Robot()
   {
@@ -66,27 +68,10 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
-    //LimelightHelpers.setLEDMode_ForceOff("");
-    camera.setLED(VisionLEDMode.kOff);
+    camObj.setDriverMode(false);
+    camAprTgHigh.setDriverMode(false);
+    camAprTgLow.setDriverMode(false);
     DriverStation.silenceJoystickConnectionWarning(true); // Disable joystick connection warning
-    Optional<Alliance> allianceColor = DriverStation.getAlliance();
-    if (allianceColor.isPresent()) {
-        if (allianceColor.get() == Alliance.Red) {
-          AprilTagConstants.ampID      = 5;
-          AprilTagConstants.speakerID  = 4;
-          AprilTagConstants.stageIDA  = 13;
-          AprilTagConstants.stageIDB  = 12;
-          AprilTagConstants.stageIDC  = 11;
-        }
-        if (allianceColor.get() == Alliance.Blue) {
-          AprilTagConstants.ampID      = 6;
-          AprilTagConstants.speakerID  = 7;
-          AprilTagConstants.stageIDA  = 14;
-          AprilTagConstants.stageIDB  = 15;
-          AprilTagConstants.stageIDC  = 16;
-
-        }
-      }
   }
 
   /**
@@ -113,10 +98,10 @@ public class Robot extends TimedRobot
   public void disabledInit()
   {
     m_robotContainer.setMotorBrake(true);
-    camera.setLED(VisionLEDMode.kOff);
-    //LimelightHelpers.setLEDMode_ForceOff("");
     disabledTimer.reset();
     disabledTimer.start();
+    RobotContainer.driverXbox.setRumble(RumbleType.kBothRumble, 0);
+    LEDs.setLED(.99);
   }
 
   @Override
@@ -136,9 +121,8 @@ public class Robot extends TimedRobot
   public void autonomousInit()
   {
     m_robotContainer.setMotorBrake(true);
-    camera.setLED(VisionLEDMode.kDefault);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    Constants.Drivebase.Heading_Correction = true;
+    aprilTagAlliance();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
@@ -167,13 +151,13 @@ public class Robot extends TimedRobot
     {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.setDriveMode();
-    //m_robotContainer.setMotorBrake(true);
 
+    m_robotContainer.setDriveMode();
+    aprilTagAlliance();
+    RobotContainer.driverXbox.setRumble(RumbleType.kBothRumble, 0);
+    //m_robotContainer.setMotorBrake(true);
     LauncherRotateSubsystem.LauncherRotateSetpoint = 90;
-    camera.setDriverMode(false);
-    camera.setLED(VisionLEDMode.kDefault);
-    camera.setPipelineIndex(0);
+
   }
 
   /**
@@ -182,43 +166,9 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
-    // if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
-    //   ArmRotateSubsystem.m_armPIDController.setReference((ArmRotateSubsystem.ArmEncoder.getPosition()) +
-    //                                                     (RobotContainer.engineerXbox.getRightY() * 20),
-    //                                                     CANSparkMax.ControlType.kSmartMotion);                                                   
-    // }
-    if (RobotContainer.driverXbox.getRawButton(5) == true && RobotContainer.driverXbox.getRawButton(6) == true){
-      System.out.println("HighSpd");
-      //drivebase.maximumSpeed = Units.feetToMeters(14.5);
-      //Constants.Drivebase.Max_Speed_Multiplier = 1;
-      Constants.Drivebase.Max_Speed = 14.5;      
-    }
-    if (RobotContainer.driverXbox.getRawButton(5) == true && RobotContainer.driverXbox.getRawButton(6) == false){
-      System.out.println("MedSpd");
-      //drivebase.maximumSpeed = Units.feetToMeters(12.325);
-      //Constants.Drivebase.Max_Speed_Multiplier = 0.75;
-      Constants.Drivebase.Max_Speed = 12.325;
-    }
-    if (RobotContainer.driverXbox.getRawButton(5) == false && RobotContainer.driverXbox.getRawButton(6) == true){
-      System.out.println("MedSpd");
-      //drivebase.maximumSpeed = Units.feetToMeters(12.325);
-      //Constants.Drivebase.Max_Speed_Multiplier = 0.75;
-      Constants.Drivebase.Max_Speed = 12.325;
-    }
-    if (RobotContainer.driverXbox.getRawButton(5) == false && (RobotContainer.driverXbox.getRawButton(6) == false)){
-      //drivebase.maximumSpeed = Units.feetToMeters(10.875);
-      //Constants.Drivebase.Max_Speed_Multiplier = 0.5;
-      Constants.Drivebase.Max_Speed = 10.875;
-    }
+    m_robotContainer.spencerButtons();
+    watchForNote();
 
-   /*  if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
-      Climber.m_climberPIDController.setReference((Climber.ClimberEncoder.getPosition()) +
-    if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
-      LauncherRotateSubsystem.m_LauncherRotatePIDController.setReference((LauncherRotateSubsystem.LauncherRotateEncoder.getPosition()) +
-                                                        (RobotContainer.engineerXbox.getRightY() * 20),
-                                                        CANSparkMax.ControlType.kSmartMotion);                                                   
-    }
-    */
     if (RobotContainer.engineerXbox.getRawButtonPressed(2)) {
       Climber.m_climberPIDController.setGoal(5);
     } else if (RobotContainer.engineerXbox.getRawButtonPressed(3)) {
@@ -267,4 +217,43 @@ public class Robot extends TimedRobot
   public void simulationPeriodic()
   {
   }
+
+  public static void aprilTagAlliance(){
+    
+    Optional<Alliance> allianceColor = DriverStation.getAlliance();
+    if (allianceColor.isPresent()) {
+      if (allianceColor.get() == Alliance.Red) {
+        AprilTagConstants.ampID     = 5;
+        AprilTagConstants.speakerID = 4;
+        AprilTagConstants.stageIDA  = 13;
+        AprilTagConstants.stageIDB  = 12;
+        AprilTagConstants.stageIDC  = 11;
+      }
+      if (allianceColor.get() == Alliance.Blue) {
+        AprilTagConstants.ampID     = 6;
+        AprilTagConstants.speakerID = 7;
+        AprilTagConstants.stageIDA  = 14;
+        AprilTagConstants.stageIDB  = 15;
+        AprilTagConstants.stageIDC  = 16; //change to 16 when Matt figures out his purpose in tags....
+      }
+     }
+  }
+
+  public static boolean watchForNote(){
+    boolean hasTargets = false;
+    if (sensorIntake.get() == false && sensorOuttake.get() == false){
+      var result = camObj.getLatestResult(); //Get the latest result from PhotonVision
+      hasTargets = result.hasTargets(); // Check if the latest result has any targets.
+      if (hasTargets == true){
+        System.out.println("Note Found - Press and hold B to retrieve the note!");
+        LEDs.setLEDwBlink(.65, .125);
+        //RobotContainer.pulseRumble();
+      } else{
+        //RobotContainer.driverXbox.setRumble(RumbleType.kBothRumble, 0);
+        LEDs.setLED(.99);
+      }
+    }
+    return hasTargets;
+  }
+  
 }
