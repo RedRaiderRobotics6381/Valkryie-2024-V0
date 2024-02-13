@@ -59,16 +59,19 @@ public final class Constants
     public static final int kLauncherB = 19;
     public static final int kLauncherRotate = 16;
 
-    public static final double posOffset = 45;
-    public static final double posOuttake = 190; //Was 200 see note in ArmRotateSubsystem.java
-    public static final double posDefault = 60; //Was 132.5 see note in ArmRotateSubsystem.java
-    public static final double posMax = 60;
-    public static final double posMin = 12.5;
+    public static final double intakeSpeedOut = 1.00;  //used?
+    public static final double intakeSpeedIn = 0.50; //used?
+    public static final double intakeSpeedHold = 0.062; //used?
+    public static final double posOffset = 45; //need to change
+    public static final double posOuttake = 190; //need to change
+    public static final double posDefault = 60; //need to change
+    public static final double posMax = 60; //need to change
+    public static final double posMin = 12.5; //need to change
     public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(22);
     public static final double TARGET_Height_Meters = Units.inchesToMeters(57.13);
-    public static final double ROTATE_MAX_SPEED = 0.025;
-    public static final double RPM_TO_DEGREES_PER_SECOND = (6784 * 6 / 40);
-    public static final double SECONDS_PER_DEGREE = 1 / RPM_TO_DEGREES_PER_SECOND;
+    public static final double ROTATE_MAX_SPEED = 0.025; //used?
+    public static final double RPM_TO_DEGREES_PER_SECOND = (6784 * 6 / 40); //used?
+    public static final double SECONDS_PER_DEGREE = 1 / RPM_TO_DEGREES_PER_SECOND; //used?
     public static final double HEIGHT_TO_ROTATE_MOTOR = Units.inchesToMeters(9.25);
     public static final double PV_TO_ROTATE_MOTOR = Units.inchesToMeters(7.951);
     public static final double ENCODER_COUNTS_PER_REV = 42.0;
@@ -85,9 +88,9 @@ public final class Constants
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeMotor = 14; //need to change
-    public static final int kIndexerMotor = 15; //need to change
-    public static final int kLauncherIndexerMotor = 17; //need to change
+    public static final int kIntakeMotor = 14;
+    public static final int kIndexerMotor = 15;
+    public static final int kLauncherIndexerMotor = 17;
     
   }
 
