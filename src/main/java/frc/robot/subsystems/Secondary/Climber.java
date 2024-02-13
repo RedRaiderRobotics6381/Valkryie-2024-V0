@@ -2,15 +2,12 @@ package frc.robot.subsystems.Secondary;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-// import com.revrobotics.SparkAbsoluteEncoder;
-// import com.revrobotics.SparkPIDController;
-
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
+//import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
@@ -18,10 +15,11 @@ import frc.robot.Constants.ClimberConstants;
 
 
 public class Climber extends SubsystemBase{
-    public static CANSparkMax m_climberMotor1;
-    public static CANSparkMax m_climberMotor2;
+    public static CANSparkMax m_climberMotorRight;
+    public static CANSparkMax m_climberMotorLeft;
+    public static RelativeEncoder m_climberEncoder;
     public static ProfiledPIDController m_climberPIDController;
-    public static Encoder ClimberEncoder;
+    //public static Encoder ClimberEncoder;
     private static double kS = 0.0;
     private static double kG = 0.0;
     private static double kV = 0.0;
@@ -41,12 +39,13 @@ public class Climber extends SubsystemBase{
     public Climber(){
         // Declare the motors
         //TODO set motor ID
-        ClimberEncoder = new Encoder(1, 2);
-        m_climberMotor1 = new CANSparkMax(ClimberConstants.kClimberRotateMotor1, MotorType.kBrushless);
-        m_climberMotor2 = new CANSparkMax(ClimberConstants.kClimberRotateMotor2, MotorType.kBrushless);
+        //ClimberEncoder = new Encoder(1, 2);
+        m_climberMotorRight = new CANSparkMax(ClimberConstants.kClimberRotateMotor1, MotorType.kBrushless);
+        m_climberMotorLeft = new CANSparkMax(ClimberConstants.kClimberRotateMotor2, MotorType.kBrushless);
+        m_climberEncoder = m_climberMotorRight.getEncoder();
         m_climberFF = new ElevatorFeedforward(kS, kG, kV);
-        m_climberMotor2.setInverted(true);
-        m_climberMotor2.follow(m_climberMotor1);
+        m_climberMotorLeft.setInverted(true);
+        m_climberMotorLeft.follow(m_climberMotorRight);
         m_climberPIDController = new ProfiledPIDController(kP, kI, kD, m_constraints, kDt);
 
         /**
@@ -54,23 +53,23 @@ public class Climber extends SubsystemBase{
          * in the SPARK MAX to their factory default state. If no argument is passed, these
          * parameters will not persist between power cycles
          */
-        m_climberMotor1.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
-        // ClimberEncoder = m_climberMotor1.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        m_climberMotorRight.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
+        // ClimberEncoder = m_climberMotorRight.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         // ClimberEncoder.setPositionConversionFactor(360);
         // ClimberEncoder.setZeroOffset(72.5);
-
+        m_climberEncoder.setPositionConversionFactor(360); //TODO set this value to the amount the arm moves with each rotation
 
         // initialze PID controller and encoder objects
 
-        // m_climberPIDController = m_climberMotor1.getPIDController();
+        // m_climberPIDController = m_climberMotorRight.getPIDController();
         // m_climberPIDController.setFeedbackDevice(ClimberEncoder);
-        m_climberMotor1.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-        m_climberMotor1.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
-        m_climberMotor1.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 85); //TODO change this value
-        m_climberMotor1.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);//TODO change this value
-        m_climberMotor1.enableVoltageCompensation(12.0);
-        m_climberMotor1.setSmartCurrentLimit(25);
-        m_climberMotor1.burnFlash(); //Remove this after everything is up and running to save flash wear
+        m_climberMotorRight.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+        m_climberMotorRight.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+        m_climberMotorRight.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 0); //TODO change this value
+        m_climberMotorRight.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);//TODO change this value
+        m_climberMotorRight.enableVoltageCompensation(12.0);
+        m_climberMotorRight.setSmartCurrentLimit(25);
+        m_climberMotorRight.burnFlash(); //Remove this after everything is up and running to save flash wear
 
 
         // set PID coefficients
@@ -104,7 +103,7 @@ public class Climber extends SubsystemBase{
 @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Climber Enc Val", ClimberEncoder.getDistance());
+    SmartDashboard.putNumber("Climber Enc Val", m_climberEncoder.getPosition());
   }
 
 
@@ -112,8 +111,8 @@ public class Climber extends SubsystemBase{
     // implicitly require `this`
     m_climberPIDController.setGoal(ClimberHeightPos);
 
-    m_climberMotor1.setVoltage(
-        m_climberPIDController.calculate(ClimberEncoder.getDistance())
+    m_climberMotorRight.setVoltage(
+        m_climberPIDController.calculate(m_climberEncoder.getPosition())
             + m_climberFF.calculate(m_climberPIDController.getSetpoint().velocity));
   }
 
