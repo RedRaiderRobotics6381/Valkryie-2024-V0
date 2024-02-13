@@ -18,16 +18,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.OperatorConstants;
-<<<<<<< HEAD
-import frc.robot.commands.Vision.DriveToAprilTagPosCmd;
-import frc.robot.commands.Vision.PointToAprilTagCmd;
-import frc.robot.commands.Vision.PVAim;
-=======
 import frc.robot.commands.Vision.DriveToAmpCmd;
 import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
 import frc.robot.commands.Vision.DriveToStageCmd;
->>>>>>> 32ec093bafae237cb4ddd55ec425395e5d223bcc
 import frc.robot.commands.swervedrive.auto.AutoBalanceCommand;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
@@ -69,21 +63,12 @@ public class RobotContainer
     configureBindings();
     
     // Register Named Commands
-<<<<<<< HEAD
+
     NamedCommands.registerCommand("Intake", IntakeSubsystem.IntakeCmd());
     NamedCommands.registerCommand("Shoot", LauncherSubsystem.LauncherCmd());
-    NamedCommands.registerCommand("Aim", LauncherRotateSubsystem.rotateAutoPosCommand());
-    NamedCommands.registerCommand("Point to Speaker", new PointToAprilTagCmd(drivebase, 1, Constants.AprilTagConstants.speakerID));
-    //NamedCommands.registerCommand("alignCone", new LLDriveToObjectCmd(drivebase, 0));
-    //NamedCommands.registerCommand("alignCube", new LLDriveToObjectCmd(drivebase, 1));
-=======
-    NamedCommands.registerCommand("autoBalance", new AutoBalanceCommand(drivebase));
-    NamedCommands.registerCommand("armDown", LauncherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault));
-    NamedCommands.registerCommand("armUp", LauncherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake));
-    NamedCommands.registerCommand("armIntake", LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedIn));
-    NamedCommands.registerCommand("armHold", LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedHold));
-    NamedCommands.registerCommand("armOut", LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedOut));
->>>>>>> 32ec093bafae237cb4ddd55ec425395e5d223bcc
+    NamedCommands.registerCommand("Aim", LauncherRotateSubsystem.rotatePosCommand(9));
+    //NamedCommands.registerCommand("Point to Speaker", new PointToAprilTagCmd(drivebase, 1, Constants.AprilTagConstants.speakerID));
+
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -100,7 +85,6 @@ public class RobotContainer
                                                              Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND) *
                                                              Constants.Drivebase.Max_Speed_Multiplier,
-<<<<<<< HEAD
         () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) *
                                                                      Constants.Drivebase.Max_Speed_Multiplier);
 
@@ -114,19 +98,6 @@ public class RobotContainer
 
     drivebase.setDefaultCommand(
         !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
-=======
-        () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) );
-
-    Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND) *
-                                                             Constants.Drivebase.Max_Speed_Multiplier,
-        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND) *
-                                                             Constants.Drivebase.Max_Speed_Multiplier,
-        () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) *
-                                                                     Constants.Drivebase.Max_Speed_Multiplier);
-    
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
->>>>>>> 32ec093bafae237cb4ddd55ec425395e5d223bcc
   }
 
   /**
