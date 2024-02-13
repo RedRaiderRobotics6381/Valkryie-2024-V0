@@ -11,17 +11,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
   /** Creates a new LEDs. */
-  public static Spark m_RightLED;
-  public static Spark m_LeftLED;
+  private static LEDs m_controllerRight = null;
+  private static LEDs m_controllerLeft = null;
+  //private static Spark m_RightLED;
+  //private static Spark m_LeftLED;
   public static double LEDPattern; //See 5 LED PATTERN TABLE: https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
   public static double LEDBlink;
 
   static double lastTime = -1;
+  private static Spark m_RightLED = new Spark(0);
+  private static Spark m_LeftLED = new Spark(1);
 
   public LEDs() {
     // Must be a PWM header, not MXP or DIO
-    m_RightLED = new Spark(0);
-    m_LeftLED = new Spark(1);
+    // Spark m_RightLED = new Spark(0);
+    // Spark m_LeftLED = new Spark(1);
+
   }
 
   @Override
@@ -31,12 +36,22 @@ public class LEDs extends SubsystemBase {
     //m_RightLED.set(LEDPattern);
     //m_LeftLED.set(LEDPattern);
   }
+  
+  public static LEDs getInstanceRight() {
+    if (m_controllerRight == null) m_controllerRight = new LEDs();
+    return m_controllerRight;
+  }
+
+  public static LEDs getInstanceLeft() {
+    if (m_controllerLeft == null) m_controllerLeft = new LEDs();
+    return m_controllerLeft;
+  }
 
   public static Command setLED(double LEDPattern) {
-      m_RightLED.set(LEDPattern);
-      m_LeftLED.set(LEDPattern);
-      return null;
-    }
+    m_RightLED.set(LEDPattern);
+    m_LeftLED.set(LEDPattern);
+    return null;
+  }
 
   public static Command setLEDwBlink(double LEDPattern, double LEDBlink) {
       if (lastTime != -1 && Timer.getFPGATimestamp() - lastTime <= LEDBlink) {
