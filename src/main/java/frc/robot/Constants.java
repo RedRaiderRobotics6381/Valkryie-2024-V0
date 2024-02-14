@@ -78,7 +78,7 @@ public final class Constants
     public static final double PV_TO_ROTATE_MOTOR = Units.inchesToMeters(7.951);
     public static final double ENCODER_COUNTS_PER_REV = 42.0;
     public static final double DEGREES_PER_TICK = 360 / ENCODER_COUNTS_PER_REV;
-    public static final double Camera1_pitch = Math.PI / 9;
+    public static final double LowCam_pitch = Math.PI / 9;
   }
 
   public static final class AprilTagConstants {

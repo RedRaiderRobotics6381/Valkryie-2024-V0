@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 //import frc.robot.Constants;
 //import frc.robot.RobotContainer;
 import frc.robot.Constants.LauncherConstants;
+import frc.robot.commands.Vision.PVAim;
 //import frc.robot.commands.Vision.PVAim;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -114,6 +115,10 @@ public class LauncherRotateSubsystem extends SubsystemBase {
   public Command rotatePosCommand(double LauncherRotateSetpoint) {
     // implicitly require `this`
     return this.runOnce(() -> m_LauncherRotatePIDController.setReference(LauncherRotateSetpoint, CANSparkMax.ControlType.kSmartMotion));
+  }
+  public Command rotateAutoPosCommand() {
+    // implicitly require `this`
+    return this.runOnce(() -> m_LauncherRotatePIDController.setReference(PVAim.Launcher_Pitch, CANSparkMax.ControlType.kSmartMotion));
   }
 
 

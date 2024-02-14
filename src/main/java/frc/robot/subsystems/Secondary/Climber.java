@@ -18,8 +18,8 @@ import frc.robot.Constants.ClimberConstants;
 
 
 public class Climber extends SubsystemBase{
-    public static CANSparkMax m_climberMotor1;
-    public static CANSparkMax m_climberMotor2;
+    public static CANSparkMax m_climberMotorLeft;
+    public static CANSparkMax m_climberMotorRight;
     public static ProfiledPIDController m_climberPIDController;
     public static Encoder ClimberEncoder;
     private static double kS = 0.0;
@@ -42,11 +42,11 @@ public class Climber extends SubsystemBase{
         // Declare the motors
         //TODO set motor ID
         ClimberEncoder = new Encoder(1, 2);
-        m_climberMotor1 = new CANSparkMax(ClimberConstants.kClimberRotateMotor1, MotorType.kBrushless);
-        m_climberMotor2 = new CANSparkMax(ClimberConstants.kClimberRotateMotor2, MotorType.kBrushless);
+        m_climberMotorLeft = new CANSparkMax(ClimberConstants.kClimberRotateMotor1, MotorType.kBrushless);
+        m_climberMotorRight = new CANSparkMax(ClimberConstants.kClimberRotateMotor2, MotorType.kBrushless);
         m_climberFF = new ElevatorFeedforward(kS, kG, kV);
-        m_climberMotor2.setInverted(true);
-        m_climberMotor2.follow(m_climberMotor1);
+        m_climberMotorRight.setInverted(true);
+        m_climberMotorRight.follow(m_climberMotorLeft);
         m_climberPIDController = new ProfiledPIDController(kP, kI, kD, m_constraints, kDt);
 
         /**
@@ -54,7 +54,7 @@ public class Climber extends SubsystemBase{
          * in the SPARK MAX to their factory default state. If no argument is passed, these
          * parameters will not persist between power cycles
          */
-        m_climberMotor1.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
+        m_climberMotorLeft.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below
         // ClimberEncoder = m_climberMotor1.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         // ClimberEncoder.setPositionConversionFactor(360);
         // ClimberEncoder.setZeroOffset(72.5);
@@ -64,13 +64,13 @@ public class Climber extends SubsystemBase{
 
         // m_climberPIDController = m_climberMotor1.getPIDController();
         // m_climberPIDController.setFeedbackDevice(ClimberEncoder);
-        m_climberMotor1.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
-        m_climberMotor1.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
-        m_climberMotor1.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 85); //TODO change this value
-        m_climberMotor1.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);//TODO change this value
-        m_climberMotor1.enableVoltageCompensation(12.0);
-        m_climberMotor1.setSmartCurrentLimit(25);
-        m_climberMotor1.burnFlash(); //Remove this after everything is up and running to save flash wear
+        m_climberMotorLeft.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+        m_climberMotorLeft.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+        m_climberMotorLeft.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 85); //TODO change this value
+        m_climberMotorLeft.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);//TODO change this value
+        m_climberMotorLeft.enableVoltageCompensation(12.0);
+        m_climberMotorLeft.setSmartCurrentLimit(25);
+        m_climberMotorLeft.burnFlash(); //Remove this after everything is up and running to save flash wear
 
 
         // set PID coefficients
@@ -112,7 +112,7 @@ public class Climber extends SubsystemBase{
     // implicitly require `this`
     m_climberPIDController.setGoal(ClimberHeightPos);
 
-    m_climberMotor1.setVoltage(
+    m_climberMotorLeft.setVoltage(
         m_climberPIDController.calculate(ClimberEncoder.getDistance())
             + m_climberFF.calculate(m_climberPIDController.getSetpoint().velocity));
   }
