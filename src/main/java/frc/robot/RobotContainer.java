@@ -66,8 +66,6 @@ public class RobotContainer
 
     NamedCommands.registerCommand("Intake", IntakeSubsystem.IntakeCmd());
     NamedCommands.registerCommand("Shoot", LauncherSubsystem.LauncherCmd());
-
-
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     
@@ -83,19 +81,17 @@ public class RobotContainer
                                                              Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND) *
                                                              Constants.Drivebase.Max_Speed_Multiplier,
-        () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) *
-                                                                     Constants.Drivebase.Max_Speed_Multiplier);
+        () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) );
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND) *
-                                                            Constants.Drivebase.Max_Speed_Multiplier,
+                                                             Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND) *
-                                                            Constants.Drivebase.Max_Speed_Multiplier,
+                                                             Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) *
-                                                                    Constants.Drivebase.Max_Speed_Multiplier);
-
-    drivebase.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
+                                                                     Constants.Drivebase.Max_Speed_Multiplier);
+    
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
   }
 
   /**
@@ -144,24 +140,6 @@ public class RobotContainer
     // new JoystickButton(engineerXbox, 3).onFalse(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedHold));
     // new JoystickButton(engineerXbox,2 ).whileTrue(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedOut));
     // new JoystickButton(engineerXbox, 2).onFalse(LauncherSubsystem.ArmIntakeCmd(0));
-
-    if (RobotContainer.driverXbox.getRawButton(5) == true && RobotContainer.driverXbox.getRawButton(6) == true){
-      System.out.println("HighSpd");
-      Constants.Drivebase.Max_Speed_Multiplier = 1;
-    }
-    
-    if (RobotContainer.driverXbox.getRawButton(5) == true && RobotContainer.driverXbox.getRawButton(6) == false){
-      System.out.println("MedSpd");
-      Constants.Drivebase.Max_Speed_Multiplier = 0.75;
-    }
-    if (RobotContainer.driverXbox.getRawButton(5) == false && RobotContainer.driverXbox.getRawButton(6) == true){
-      System.out.println("MedSpd");
-      Constants.Drivebase.Max_Speed_Multiplier = 0.75;
-    }
-
-    if (RobotContainer.driverXbox.getRawButton(5) == false && (RobotContainer.driverXbox.getRawButton(6) == false)){
-      Constants.Drivebase.Max_Speed_Multiplier = 0.5;
-    }  
 
     // new JoystickButton(driverXbox,
     //                    2).whileTrue(
