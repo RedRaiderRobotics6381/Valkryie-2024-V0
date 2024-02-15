@@ -23,7 +23,7 @@ public class LauncherSubsystem extends SubsystemBase {
     public Command LauncherCmd() {
         // implicitly require `this`
 
-        return this.runOnce(() -> LauncherMotorTop.set(ArmIntakeSetpoint));
+        return this.runOnce(() -> LauncherMotorTop.set(1));
 
         
         //armSubsystem.intakeMotorR.set(Constants.ArmConstants.gIntakeSpeed););
