@@ -67,6 +67,7 @@ public final class Constants
     public static final double posDefault = 60; //need to change
     public static final double posMax = 60; //need to change
     public static final double posMin = 12.5; //need to change
+
     public static final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(22);
     public static final double TARGET_Height_Meters = Units.inchesToMeters(57.13);
     public static final double ROTATE_MAX_SPEED = 0.025; //used?

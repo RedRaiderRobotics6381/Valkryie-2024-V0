@@ -24,6 +24,7 @@ import frc.robot.commands.Vision.DriveToSpeakerCmd;
 import frc.robot.commands.Vision.DriveToStageCmd;
 import frc.robot.commands.swervedrive.auto.AutoBalanceCommand;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
+import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -51,6 +52,7 @@ public class RobotContainer
 
   LauncherSubsystem LauncherSubsystem = new LauncherSubsystem();
   LauncherRotateSubsystem LauncherRotateSubsystem = new LauncherRotateSubsystem();
+  IntakeSubsystem IntakeSubsystem = new IntakeSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -61,13 +63,9 @@ public class RobotContainer
     configureBindings();
     
     // Register Named Commands
-    NamedCommands.registerCommand("autoBalance", new AutoBalanceCommand(drivebase));
-    NamedCommands.registerCommand("armDown", LauncherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault));
-    NamedCommands.registerCommand("armUp", LauncherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake));
-    NamedCommands.registerCommand("armIntake", LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedIn));
-    NamedCommands.registerCommand("armHold", LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedHold));
-    NamedCommands.registerCommand("armOut", LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedOut));
 
+    NamedCommands.registerCommand("Intake", IntakeSubsystem.IntakeCmd());
+    NamedCommands.registerCommand("Shoot", LauncherSubsystem.LauncherCmd());
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     
@@ -138,10 +136,10 @@ public class RobotContainer
     //new JoystickButton(engineerXbox, 7).onTrue(LauncherRotateSubsystem.rotateAutoPosCommand());
 
     //new JoystickButton(engineerXbox,3 ).whileTrue(new ArmIntakeInCmd(armIntakeSubsystem));
-    new JoystickButton(engineerXbox,3 ).whileTrue(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedIn));
-    new JoystickButton(engineerXbox, 3).onFalse(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedHold));
-    new JoystickButton(engineerXbox,2 ).whileTrue(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedOut));
-    new JoystickButton(engineerXbox, 2).onFalse(LauncherSubsystem.ArmIntakeCmd(0));
+    // new JoystickButton(engineerXbox,3 ).whileTrue(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedIn));
+    // new JoystickButton(engineerXbox, 3).onFalse(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedHold));
+    // new JoystickButton(engineerXbox,2 ).whileTrue(LauncherSubsystem.ArmIntakeCmd(LauncherConstants.intakeSpeedOut));
+    // new JoystickButton(engineerXbox, 2).onFalse(LauncherSubsystem.ArmIntakeCmd(0));
 
     // new JoystickButton(driverXbox,
     //                    2).whileTrue(

@@ -13,15 +13,18 @@ public class LauncherSubsystem extends SubsystemBase {
     public CANSparkMax LauncherMotorBot;
 
     public LauncherSubsystem() {
+
         LauncherMotorTop =  new CANSparkMax(Constants.LauncherConstants.kLauncherT, MotorType.kBrushless);
         LauncherMotorBot =  new CANSparkMax(Constants.LauncherConstants.kLauncherB, MotorType.kBrushless);
 
         LauncherMotorBot.follow(LauncherMotorTop, true);
     }
     
-    public Command ArmIntakeCmd(double ArmIntakeSetpoint) {
+    public Command LauncherCmd() {
         // implicitly require `this`
+
         return this.runOnce(() -> LauncherMotorTop.set(ArmIntakeSetpoint));
+
         
         //armSubsystem.intakeMotorR.set(Constants.ArmConstants.gIntakeSpeed););
     }
