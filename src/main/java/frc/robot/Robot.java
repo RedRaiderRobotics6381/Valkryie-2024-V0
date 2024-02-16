@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.AprilTagConstants;
-import frc.robot.subsystems.Secondary.Climber;
+//import frc.robot.subsystems.Secondary.Climber;
 import frc.robot.subsystems.Secondary.LEDs;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
 import java.io.File;
@@ -169,14 +169,15 @@ public class Robot extends TimedRobot
     m_robotContainer.spencerButtons();
     watchForNote();
 
-    if (RobotContainer.engineerXbox.getRawButtonPressed(2)) {
-      Climber.m_climberPIDController.setGoal(5);
-    } else if (RobotContainer.engineerXbox.getRawButtonPressed(3)) {
-      Climber.m_climberPIDController.setGoal(0);
-    }
-    Climber.m_climberMotor1.setVoltage(
-      Climber.m_climberPIDController.calculate(Climber.ClimberEncoder.getDistance())
-          + Climber.m_climberFF.calculate(Climber.m_climberPIDController.getSetpoint().velocity));
+    //TODO: This needs to be moved to a command
+    // if (RobotContainer.engineerXbox.getRawButtonPressed(2)) {
+    //   Climber.m_climberPIDController.setGoal(5);
+    // } else if (RobotContainer.engineerXbox.getRawButtonPressed(3)) {
+    //   Climber.m_climberPIDController.setGoal(0);
+    // }
+    // Climber.m_climberMotor1.setVoltage(
+    //   Climber.m_climberPIDController.calculate(Climber.ClimberEncoder.getDistance())
+    //       + Climber.m_climberFF.calculate(Climber.m_climberPIDController.getSetpoint().velocity));
 }
   
 
