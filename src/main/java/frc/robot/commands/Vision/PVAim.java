@@ -10,10 +10,12 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
+
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.LauncherConstants;
+import frc.robot.Robot;
+
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
 import edu.wpi.first.math.util.Units;
@@ -41,10 +43,6 @@ public class PVAim extends Command
   @Override
   public void initialize()
   {
-    Robot.camAprTgLow.setLED(VisionLEDMode.kOn);
-    Robot.camAprTgLow.setPipelineIndex((int)visionObject);
-    Robot.camAprTgLow.setDriverMode(false);
-
   }
 
   /**
@@ -65,10 +63,11 @@ public class PVAim extends Command
       SmartDashboard.putNumber("Angle to Target", TZ);
 
       Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
-      //TODO which camera is this?
+
+
       Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
                                                                              LauncherConstants.TARGET_Height_Meters, 
-                                                                             LauncherConstants.Camera1_pitch, 
+                                                                             LauncherConstants.LowCam_pitch, 
                                                                              Units.degreesToRadians(result.getBestTarget().getPitch())) + LauncherConstants.PV_TO_ROTATE_MOTOR;
 
      Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
