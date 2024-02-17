@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 //import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
@@ -106,14 +107,17 @@ public class Climber extends SubsystemBase{
   }
 
 
-    public void climberHeightCommand(double ClimberHeightPos) {
+    public Command climberHeightCommand(double ClimberHeightPos) {
     // implicitly require `this`
+    return this.runOnce(() ->{
     m_climberPIDController.setGoal(ClimberHeightPos);
 
     m_climberMotorR.setVoltage(
         m_climberPIDController.calculate(m_climberEncoder.getPosition())
             + m_climberFF.calculate(m_climberPIDController.getSetpoint().velocity));
-  }
+    });
+}
+
 
 
 }

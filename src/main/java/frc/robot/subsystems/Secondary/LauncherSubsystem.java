@@ -2,6 +2,7 @@ package frc.robot.subsystems.Secondary;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,14 +11,14 @@ import frc.robot.Constants;
 
 public class LauncherSubsystem extends SubsystemBase {
 
-    public CANSparkMax m_launcherMotorTop;
-    public CANSparkMax m_launcherMotorBot;
+    public CANSparkFlex m_launcherMotorTop;
+    public CANSparkFlex m_launcherMotorBot;
     public static SparkPIDController launcherPIDController;
 
     public LauncherSubsystem() {
 
-        m_launcherMotorTop =  new CANSparkMax(Constants.LauncherConstants.kLauncherT, MotorType.kBrushless);
-        m_launcherMotorBot =  new CANSparkMax(Constants.LauncherConstants.kLauncherB, MotorType.kBrushless);
+        m_launcherMotorTop =  new CANSparkFlex(Constants.LauncherConstants.kLauncherT, MotorType.kBrushless);
+        m_launcherMotorBot =  new CANSparkFlex(Constants.LauncherConstants.kLauncherB, MotorType.kBrushless);
 
         m_launcherMotorBot.follow(m_launcherMotorTop, true);
         m_launcherMotorTop.restoreFactoryDefaults();  //Remove this when we remove the burnFlash() call below

@@ -131,6 +131,11 @@ public class PVAim extends Command
   @Override
   public void end(boolean interrupted)
   {
+    try {
+      wait(500);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     launcherSubsystem.LauncherCmd(0);
     intakeSubsystem.LaunchCmd(0);
     RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kBothRumble, 0);
