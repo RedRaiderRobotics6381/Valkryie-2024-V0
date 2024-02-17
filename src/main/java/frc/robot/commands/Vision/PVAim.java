@@ -13,6 +13,7 @@ import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.LauncherConstants;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
+import frc.robot.subsystems.Secondary.LEDs;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
 import edu.wpi.first.math.util.Units;
@@ -53,43 +54,46 @@ public class PVAim extends Command
   @Override
   public void execute()
   {
-    var photonRes = Robot.camAprTgLow.getLatestResult();
-    //System.out.println(photonRes.hasTargets());
-    if (photonRes.hasTargets()) {
-      //Find the tag we want to chase
-      var targetOpt = photonRes.getTargets().stream()
-        .filter(t -> t.getFiducialId() == AprilTagConstants.speakerID) //4 Red & 7 Blue
-        .filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() != -1)
-        .findFirst();
-      if (targetOpt.isPresent()) {
-        var target = targetOpt.get();
-        Double TZ = target.getPitch();
-        SmartDashboard.putNumber("Angle to Target", TZ);
-        // var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
-        // boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
-        // PhotonTrackedTarget target = result.getBestTarget();
-        //int targetID = result
-        Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
-        Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
-                                                                              LauncherConstants.TARGET_Height_Meters, 
-                                                                              LauncherConstants.Camera1_pitch, 
-                                                                              Units.degreesToRadians(TZ))
-                                                                              + LauncherConstants.PV_TO_ROTATE_MOTOR;
+    if (Robot.sensorOuttake.get() == true){
+      var photonRes = Robot.camAprTgLow.getLatestResult();
+      //System.out.println(photonRes.hasTargets());
+      if (photonRes.hasTargets()) {
+        //Find the tag we want to chase
+        var targetOpt = photonRes.getTargets().stream()
+          .filter(t -> t.getFiducialId() == AprilTagConstants.speakerID) //4 Red & 7 Blue
+          .filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() != -1)
+          .findFirst();
+        if (targetOpt.isPresent()) {
+          var target = targetOpt.get();
+          Double TZ = target.getPitch();
+          SmartDashboard.putNumber("Angle to Target", TZ);
+          // var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
+          // boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
+          // PhotonTrackedTarget target = result.getBestTarget();
+          //int targetID = result
+          Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
+          Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
+                                                                                LauncherConstants.TARGET_Height_Meters, 
+                                                                                LauncherConstants.Camera1_pitch, 
+                                                                                Units.degreesToRadians(TZ))
+                                                                                + LauncherConstants.PV_TO_ROTATE_MOTOR;
 
-        Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
+          Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
+            
+          launcherRotateSubsystem.rotatePosCommand(Launcher_Pitch);
+          RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
+          RobotContainer.engineerXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
+          LEDs.setLED(.93);
           
-        launcherRotateSubsystem.rotatePosCommand(Launcher_Pitch);
-        RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-        RobotContainer.engineerXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-        
-        if (RobotContainer.engineerXbox.getRawButton(2) == true) {
-          launcherSubsystem.LauncherCmd(5000);
-          if (launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 4950) {
-            intakeSubsystem.LaunchCmd();
+          if (RobotContainer.engineerXbox.getRawButton(2) == true) {
+            launcherSubsystem.LauncherCmd(5000);
+            if (launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 4950) {
+              intakeSubsystem.LaunchCmd(5000);
+            }
           }
+          // This is new target data, so recalculate the goal
+          lastTarget = target;
         }
-        // This is new target data, so recalculate the goal
-        lastTarget = target;
       }
     } 
    
@@ -114,7 +118,7 @@ public class PVAim extends Command
   @Override
   public boolean isFinished()
   {
-    return false;
+    return Robot.sensorOuttake.get() == false;
   }
 
   /**
@@ -127,7 +131,8 @@ public class PVAim extends Command
   @Override
   public void end(boolean interrupted)
   {
-    //swerveSubsystem.lock();
+    launcherSubsystem.LauncherCmd(0);
+    intakeSubsystem.LaunchCmd(0);
     RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kBothRumble, 0);
   }
 }

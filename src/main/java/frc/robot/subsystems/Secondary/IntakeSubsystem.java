@@ -65,17 +65,17 @@ public class IntakeSubsystem extends SubsystemBase {
         // implicitly require `this`
         return this.runOnce(() -> {
             intakePIDController.setReference(2500, CANSparkMax.ControlType.kSmartVelocity);
-            if (Robot.sensorIntake.get() == true  && Robot.sensorOuttake.get() == true){
+            if (Robot.sensorOuttake.get() == true){
                 intakePIDController.setReference(0, CANSparkMax.ControlType.kSmartVelocity);
                 LEDs.setLED(.65);
             }
         });
     }
 
-        public Command LaunchCmd() {
+        public Command LaunchCmd(double speed) {
             // implicitly require `this`
             return this.runOnce(() -> {
-                intakePIDController.setReference(5000, CANSparkMax.ControlType.kSmartVelocity);
+                intakePIDController.setReference(speed, CANSparkMax.ControlType.kSmartVelocity);
 
             });
         //set to final speed once tested
