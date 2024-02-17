@@ -5,12 +5,10 @@
 package frc.robot.subsystems.Secondary;
 
 import com.revrobotics.CANSparkMax;
-//import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants.LauncherConstants;
-//import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,18 +17,16 @@ public class LauncherRotateSubsystem extends SubsystemBase {
   public static CANSparkMax m_LauncherRotateMotor;
   public static SparkPIDController m_LauncherRotatePIDController;
   public static SparkAbsoluteEncoder m_LauncherRotateEncoder;
-  //public static DutyCycleEncoder m_LauncherRotateEncoder;
   public static double LauncherRotateSetpoint;
   public static double RotateManualPos;
   
-  //public static double RotateManualPos;
-  /** Creates a new ArmRotateSubSys. 
+
+  /** Creates a new LauncherRotateSubsystem. 
  * @param LauncherRotateSubsystem
  * */
   public LauncherRotateSubsystem() {
         // initialize motor
         m_LauncherRotateMotor = new CANSparkMax(LauncherConstants.kLauncherRotate, MotorType.kBrushless);
-        //DutyCycleEncoder m_LauncherRotateEncoder = new DutyCycleEncoder(2);
 
         /**
          * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -48,7 +44,6 @@ public class LauncherRotateSubsystem extends SubsystemBase {
     
         // initialze PID controller and encoder objects
         m_LauncherRotatePIDController = m_LauncherRotateMotor.getPIDController();
-        //m_LauncherRotatePIDController.setFeedbackDevice(LauncherRotateEncoder);
         m_LauncherRotatePIDController.setFeedbackDevice(m_LauncherRotateEncoder);
         m_LauncherRotateMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 85);
         m_LauncherRotateMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 241);
@@ -96,8 +91,7 @@ public class LauncherRotateSubsystem extends SubsystemBase {
  @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //SmartDashboard.putNumber("Arm Enc Val", m_LauncherRotateEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Arm Enc Val", m_LauncherRotateEncoder.getPosition());
+    SmartDashboard.putNumber("Rotator Enc Val", m_LauncherRotateEncoder.getPosition());
   }
 
 

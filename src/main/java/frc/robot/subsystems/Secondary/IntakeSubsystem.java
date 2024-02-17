@@ -64,22 +64,27 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command IntakeCmd() {
         // implicitly require `this`
         return this.runOnce(() -> {
-            intakeMotor.set(0.5);
-            indexerMotor.set(0.5);
+            intakePIDController.setReference(2500, CANSparkMax.ControlType.kSmartVelocity);
             if (Robot.sensorIntake.get() == true  && Robot.sensorOuttake.get() == true){
-                intakeMotor.set(0);
-                indexerMotor.set(0);
+                intakePIDController.setReference(0, CANSparkMax.ControlType.kSmartVelocity);
                 LEDs.setLED(.65);
             }
         });
+    }
 
+        public Command LaunchCmd() {
+            // implicitly require `this`
+            return this.runOnce(() -> {
+                intakePIDController.setReference(5000, CANSparkMax.ControlType.kSmartVelocity);
+
+            });
         //set to final speed once tested
         
     }
 
     public Command IntakeReverseCmd() {
         // implicitly require `this`
-        return this.runOnce(() -> intakeMotor.set(-0.5));
+        return this.runOnce(() -> intakePIDController.setReference(-2500, CANSparkMax.ControlType.kSmartVelocity));
         //set to final speed once tested
         
     }

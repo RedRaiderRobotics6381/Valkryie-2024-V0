@@ -22,7 +22,6 @@ import frc.robot.commands.Vision.DriveToAmpCmd;
 import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
 import frc.robot.commands.Vision.DriveToStageCmd;
-import frc.robot.commands.swervedrive.auto.AutoBalanceCommand;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
@@ -50,9 +49,9 @@ public class RobotContainer
   private final SendableChooser<Command> autoChooser;
   static double lastTime = -1;
 
-  LauncherSubsystem LauncherSubsystem = new LauncherSubsystem();
-  LauncherRotateSubsystem LauncherRotateSubsystem = new LauncherRotateSubsystem();
-  IntakeSubsystem IntakeSubsystem = new IntakeSubsystem();
+  LauncherSubsystem launcherSubsystem = new LauncherSubsystem();
+  LauncherRotateSubsystem launcherRotateSubsystem = new LauncherRotateSubsystem();
+  IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -64,8 +63,8 @@ public class RobotContainer
     
     // Register Named Commands
 
-    NamedCommands.registerCommand("Intake", IntakeSubsystem.IntakeCmd());
-    NamedCommands.registerCommand("Shoot", LauncherSubsystem.LauncherCmd());
+    NamedCommands.registerCommand("Intake", intakeSubsystem.IntakeCmd());
+    NamedCommands.registerCommand("Shoot", launcherSubsystem.LauncherCmd(5000));
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     
@@ -130,8 +129,8 @@ public class RobotContainer
     new JoystickButton(driverXbox, 4).whileTrue(new DriveToStageCmd(drivebase));
 
 
-    new JoystickButton(engineerXbox, 1).onTrue(LauncherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
-    new JoystickButton(engineerXbox, 4).onTrue(LauncherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0 
+    new JoystickButton(engineerXbox, 1).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
+    new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0 
     
     //new JoystickButton(engineerXbox, 7).onTrue(LauncherRotateSubsystem.rotateAutoPosCommand());
 
