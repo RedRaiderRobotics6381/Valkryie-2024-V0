@@ -63,8 +63,8 @@ public final class Constants
     public static final double intakeSpeedIn = 0.50; //used?
     public static final double intakeSpeedHold = 0.062; //used?
     public static final double posOffset = 45; //need to change
-    public static final double posOuttake = 190; //need to change
-    public static final double posDefault = 60; //need to change
+    public static final double posOuttake = 124.5; //need to change
+    public static final double posDefault = 150; //need to change
     public static final double posMax = 60; //need to change
     public static final double posMin = 12.5; //need to change
 

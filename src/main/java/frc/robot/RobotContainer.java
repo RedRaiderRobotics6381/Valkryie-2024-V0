@@ -23,6 +23,7 @@ import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
 import frc.robot.commands.Vision.DriveToStageCmd;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
+import frc.robot.subsystems.Secondary.Climber;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -52,6 +53,7 @@ public class RobotContainer
   LauncherSubsystem launcherSubsystem = new LauncherSubsystem();
   LauncherRotateSubsystem launcherRotateSubsystem = new LauncherRotateSubsystem();
   IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  Climber climberSubsystem = new Climber();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -63,7 +65,7 @@ public class RobotContainer
     
     // Register Named Commands
 
-    NamedCommands.registerCommand("Intake", intakeSubsystem.IntakeCmd());
+    //NamedCommands.registerCommand("Intake", intakeSubsystem.IntakeCmd());
     NamedCommands.registerCommand("Shoot", launcherSubsystem.LauncherCmd(5000));
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -130,7 +132,11 @@ public class RobotContainer
 
 
     new JoystickButton(engineerXbox, 1).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
-    new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0 
+    new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0
+    new JoystickButton(engineerXbox, 6).onTrue(intakeSubsystem.InitialIntakeCmd());
+    new JoystickButton(engineerXbox, 5).onTrue(intakeSubsystem.LaunchIntakeCmd());
+    //new JoystickButton(engineerXbox, 5).whileTrue(launcherSubsystem.LauncherCmd(.75));
+    //new JoystickButton(engineerXbox, 3).whileTrue(climberSubsystem.climberInCmd()); 
     
     //new JoystickButton(engineerXbox, 7).onTrue(LauncherRotateSubsystem.rotateAutoPosCommand());
 

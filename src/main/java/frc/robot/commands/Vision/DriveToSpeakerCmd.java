@@ -122,7 +122,7 @@ public class DriveToSpeakerCmd extends Command
         omegaSpeed = 0;
       }
 
-      swerveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, omegaSpeed, robotPose2d.getRotation()));
+      swerveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-xSpeed, -ySpeed, omegaSpeed, robotPose2d.getRotation()));
     }
   }
 

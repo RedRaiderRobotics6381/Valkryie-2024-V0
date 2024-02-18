@@ -88,7 +88,7 @@ public class PVAim extends Command
           if (RobotContainer.engineerXbox.getRawButton(2) == true) {
             launcherSubsystem.LauncherCmd(5000);
             if (launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 4950) {
-              intakeSubsystem.LaunchCmd(5000);
+              //intakeSubsystem.LaunchCmd(5000);
             }
           }
           // This is new target data, so recalculate the goal
@@ -137,7 +137,7 @@ public class PVAim extends Command
       e.printStackTrace();
     }
     launcherSubsystem.LauncherCmd(0);
-    intakeSubsystem.LaunchCmd(0);
+    //intakeSubsystem.LaunchCmd(0);
     RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kBothRumble, 0);
   }
 }

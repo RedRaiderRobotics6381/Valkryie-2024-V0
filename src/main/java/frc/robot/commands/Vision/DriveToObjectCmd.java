@@ -60,14 +60,14 @@ public class DriveToObjectCmd extends Command
       double TZ = target.getYaw();
       double TX = target.getPitch();
 
-      double translationValx = MathUtil.clamp(xController.calculate(TX, -18), -1.0 , 1.0); //Tune the setpoint to be where the note is just barely found.
+      double translationValx = MathUtil.clamp(-xController.calculate(TX, -18), -1.0 , 1.0); //Tune the setpoint to be where the note is just barely found.
       double translationValz = MathUtil.clamp(zController.calculate(TZ, 0.0), -2.0 , 2.0); //* throttle, 2.5 * throttle);
 
       if (xController.atSetpoint() != true) {
         swerveSubsystem.drive(new Translation2d(translationValx, 0.0),
         translationValz,
         false);
-        new IntakeSubsystem().IntakeCmd();
+        //new IntakeSubsystem().IntakeCmd();
       } //else{
         //swerveSubsystem.getPose();
         //  swerveSubsystem.driveToPose(new Pose2d(new Translation2d(.25, 0), Rotation2d.fromDegrees(0)));
