@@ -1,40 +1,45 @@
 package frc.robot.commands.Vision;
 
-import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
-import org.photonvision.common.hardware.VisionLEDMode;
+//import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-
-
+// import com.revrobotics.CANSparkLowLevel.MotorType;
+// import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.Secondary.IntakeSubsystem;
+import frc.robot.subsystems.Secondary.LEDs;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
+import frc.robot.subsystems.Secondary.LauncherSubsystem;
 import edu.wpi.first.math.util.Units;
-/**
- * Auto Balance command using a simple PID controller. Created by Team 3512
- * https://github.com/frc3512/Robot-2023/blob/main/src/main/java/frc3512/robot/commands/AutoBalance.java
- */
+
 public class PVAim extends Command
 {
-  private double visionObject;
-  CANSparkMax m_LauncherRotateMotor = new CANSparkMax(LauncherConstants.kLauncherRotate, MotorType.kBrushless);
+  //private double visionObject;
+  //CANSparkMax m_LauncherRotateMotor = new CANSparkMax(LauncherConstants.kLauncherRotate, MotorType.kBrushless);
   public static double Launcher_Pitch;
- 
-  public PVAim(double visionObject)
+  private final LauncherRotateSubsystem launcherRotateSubsystem;
+  private final LauncherSubsystem launcherSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
+  private PhotonTrackedTarget lastTarget;
+
+  public PVAim(LauncherRotateSubsystem launcherRotateSubsystem, LauncherSubsystem launcherSubsystem , IntakeSubsystem intakeSubsystem)
   {
 
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
-    this.visionObject = visionObject;
+    this.launcherRotateSubsystem = launcherRotateSubsystem;
+    this.launcherSubsystem = launcherSubsystem;
+    this.intakeSubsystem = intakeSubsystem;
   }
 
   /**
@@ -43,6 +48,10 @@ public class PVAim extends Command
   @Override
   public void initialize()
   {
+
+    lastTarget = null;
+
+
   }
 
   /**
@@ -52,6 +61,34 @@ public class PVAim extends Command
   @Override
   public void execute()
   {
+    if (Robot.sensorOuttake.get() == true){
+      var photonRes = Robot.camAprTgLow.getLatestResult();
+      //System.out.println(photonRes.hasTargets());
+      if (photonRes.hasTargets()) {
+        //Find the tag we want to chase
+        var targetOpt = photonRes.getTargets().stream()
+          .filter(t -> t.getFiducialId() == AprilTagConstants.speakerID) //4 Red & 7 Blue
+          .filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() != -1)
+          .findFirst();
+        if (targetOpt.isPresent()) {
+          var target = targetOpt.get();
+          Double TZ = target.getPitch();
+          SmartDashboard.putNumber("Angle to Target", TZ);
+          // var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
+          // boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
+          // PhotonTrackedTarget target = result.getBestTarget();
+          //int targetID = result
+          Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
+          Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
+                                                                                LauncherConstants.TARGET_Height_Meters, 
+                                                                                LauncherConstants.Camera1_pitch, 
+                                                                                Units.degreesToRadians(TZ))
+                                                                                + LauncherConstants.PV_TO_ROTATE_MOTOR;
+
+          Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
+            
+          launcherRotateSubsystem.rotatePosCommand(Launcher_Pitch);
+
     var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
     boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
     PhotonTrackedTarget target = result.getBestTarget();
@@ -76,20 +113,23 @@ public class PVAim extends Command
       
 
       if (visionObject == 0) {
+
           RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-        //LauncherRotateSubsystem.m_LauncherRotatePIDController.setReference(1, CANSparkMax.ControlType.kSmartMotion);
-        LauncherRotateSubsystem.m_LauncherRotateMotor.set(LauncherConstants.ROTATE_MAX_SPEED);
-      
-
+          RobotContainer.engineerXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
+          LEDs.setLED(.93);
           
+          if (RobotContainer.engineerXbox.getRawButton(2) == true) {
+            launcherSubsystem.LauncherCmd(5000);
+            if (launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 4950) {
+              //intakeSubsystem.LaunchCmd(5000);
+            }
+          }
+          // This is new target data, so recalculate the goal
+          lastTarget = target;
         }
-
-      if (visionObject == 1) {
-          RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kRightRumble, 0.25);
-
-        }
-    }
-    
+      }
+    } 
+   
       // double translationVal = MathUtil.clamp(controller.calculate(swerveSubsystem.getPitch().getDegrees(), 0.0), -0.5,
     //                                        0.5);
     // swerveSubsystem.drive(new Translation2d(translationVal, 0.0), 0.0, true, false);
@@ -111,7 +151,7 @@ public class PVAim extends Command
   @Override
   public boolean isFinished()
   {
-    return false;
+    return Robot.sensorOuttake.get() == false;
   }
 
   /**
@@ -124,7 +164,13 @@ public class PVAim extends Command
   @Override
   public void end(boolean interrupted)
   {
-    //swerveSubsystem.lock();
+    try {
+      wait(500);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    launcherSubsystem.LauncherCmd(0);
+    //intakeSubsystem.LaunchCmd(0);
     RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kBothRumble, 0);
   }
 }
