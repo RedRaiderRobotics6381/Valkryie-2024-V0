@@ -235,7 +235,7 @@ public class Robot extends TimedRobot
         AprilTagConstants.speakerID = 7;
         AprilTagConstants.stageIDA  = 14;
         AprilTagConstants.stageIDB  = 15;
-        AprilTagConstants.stageIDC  = 16; //change to 16 when Matt figures out his purpose in tags....
+        AprilTagConstants.stageIDC  = 16; // Matts Awesome Please....
       }
      }
   }

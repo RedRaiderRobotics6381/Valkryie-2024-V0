@@ -9,6 +9,13 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants.LauncherConstants;
+// <<<<<<< Jason
+// =======
+// import frc.robot.commands.Vision.PVAim;
+// //import frc.robot.commands.Vision.PVAim;
+// import edu.wpi.first.wpilibj.DutyCycleEncoder;
+
+// >>>>>>> main
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -105,6 +112,10 @@ public class LauncherRotateSubsystem extends SubsystemBase {
   public Command rotatePosCommand(double LauncherRotateSetpoint) {
     // implicitly require `this`
     return this.runOnce(() -> m_LauncherRotatePIDController.setReference(LauncherRotateSetpoint, CANSparkMax.ControlType.kSmartMotion));
+  }
+  public Command rotateAutoPosCommand() {
+    // implicitly require `this`
+    return this.runOnce(() -> m_LauncherRotatePIDController.setReference(PVAim.Launcher_Pitch, CANSparkMax.ControlType.kSmartMotion));
   }
 
   public Command rotateIntakeCommand() {
