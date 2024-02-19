@@ -112,6 +112,10 @@ public class LauncherRotateSubsystem extends SubsystemBase {
     // implicitly require `this`
     return this.runOnce(() -> m_LauncherRotatePIDController.setReference(LauncherRotateSetpoint, CANSparkMax.ControlType.kSmartMotion));
   }
+  public Command rotateAutoPosCommand() {
+    // implicitly require `this`
+    return this.runOnce(() -> m_LauncherRotatePIDController.setReference(PVAim.Launcher_Pitch, CANSparkMax.ControlType.kSmartMotion));
+  }
 
   public Command rotateIntakeCommand() {
     // implicitly require `this`

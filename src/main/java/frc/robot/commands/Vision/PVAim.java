@@ -8,9 +8,13 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+
+//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.LauncherConstants;
+import frc.robot.Robot;
+
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LEDs;
@@ -44,7 +48,10 @@ public class PVAim extends Command
   @Override
   public void initialize()
   {
+
     lastTarget = null;
+
+
   }
 
   /**
@@ -81,6 +88,32 @@ public class PVAim extends Command
           Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
             
           launcherRotateSubsystem.rotatePosCommand(Launcher_Pitch);
+
+    var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
+    boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
+    PhotonTrackedTarget target = result.getBestTarget();
+    //int targetID = result.
+    
+    while (hasTargets == true) {
+      RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
+      Double TZ = target.getPitch();
+      SmartDashboard.putNumber("Angle to Target", TZ);
+
+      Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
+
+
+      Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
+                                                                             LauncherConstants.TARGET_Height_Meters, 
+                                                                             LauncherConstants.LowCam_pitch, 
+                                                                             Units.degreesToRadians(result.getBestTarget().getPitch())) + LauncherConstants.PV_TO_ROTATE_MOTOR;
+
+     Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
+      
+
+      
+
+      if (visionObject == 0) {
+
           RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
           RobotContainer.engineerXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
           LEDs.setLED(.93);

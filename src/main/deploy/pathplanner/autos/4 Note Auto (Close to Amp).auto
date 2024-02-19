@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.43,
-      "y": 7.01
+      "x": 0.74,
+      "y": 6.68
     },
-    "rotation": 180.0
+    "rotation": -120.64999705150785
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Shoot 1st Note (Close to Amp)"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -36,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2nd Note"
+                  "pathName": "4th Note (Close to Amp)"
                 }
               }
             ]
@@ -45,7 +39,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot 2nd Note"
+            "pathName": "Shoot 4th Note"
           }
         },
         {
@@ -98,7 +92,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4th Note"
+                  "pathName": "2nd Note"
                 }
               }
             ]
@@ -107,7 +101,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot 4th Note"
+            "pathName": "Shoot 2nd Note"
           }
         },
         {
