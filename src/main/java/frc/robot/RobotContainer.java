@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Secondary.IntakeCmd;
+import frc.robot.commands.Secondary.OuttakeCmd;
 import frc.robot.commands.Vision.DriveToAmpCmd;
 import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
@@ -133,10 +135,13 @@ public class RobotContainer
 
     new JoystickButton(engineerXbox, 1).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
     new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0
-    new JoystickButton(engineerXbox, 6).onTrue(intakeSubsystem.InitialIntakeCmd());
-    new JoystickButton(engineerXbox, 5).onTrue(intakeSubsystem.LaunchIntakeCmd());
+    //new JoystickButton(engineerXbox, 6).onTrue(intakeSubsystem.InitialIntakeCmd());
+    new JoystickButton(engineerXbox, 6).onTrue(new IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
+    //new JoystickButton(engineerXbox, 5).onTrue(intakeSubsystem.LaunchIntakeCmd());
+    new JoystickButton(engineerXbox, 5).onTrue(new OuttakeCmd(intakeSubsystem, launcherSubsystem));
     //new JoystickButton(engineerXbox, 5).whileTrue(launcherSubsystem.LauncherCmd(.75));
     //new JoystickButton(engineerXbox, 3).whileTrue(climberSubsystem.climberInCmd()); 
+    
     
     //new JoystickButton(engineerXbox, 7).onTrue(LauncherRotateSubsystem.rotateAutoPosCommand());
 

@@ -42,8 +42,8 @@ public class Robot extends TimedRobot
   public static PhotonCamera camAprTgLow = new PhotonCamera("camAprTgLow");
   public static PhotonCamera camAprTgHigh = new PhotonCamera("camAprTgHigh");
    
-  public static DigitalInput sensorIntake = new DigitalInput(0); //This is the lower sensor, it will be true when a note is first intaked
-  public static DigitalInput sensorOuttake = new DigitalInput(1); //This is the upper sensor, it will be true when a note is ready for outtake
+  public static DigitalInput sensorIntake = new DigitalInput(1); //This is the lower sensor, it will be true when a note is first intaked
+  public static DigitalInput sensorOuttake = new DigitalInput(0); //This is the upper sensor, it will be true when a note is ready for outtake
 
   public Robot()
   {

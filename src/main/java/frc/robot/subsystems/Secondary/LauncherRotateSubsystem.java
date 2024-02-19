@@ -9,6 +9,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants.LauncherConstants;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -93,6 +94,11 @@ public class LauncherRotateSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Rotator Enc Val", m_LauncherRotateEncoder.getPosition());
+        if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
+          m_LauncherRotatePIDController.setReference((m_LauncherRotateEncoder.getPosition()) +
+                                                           (RobotContainer.engineerXbox.getRightY() * 20),
+                                                           CANSparkMax.ControlType.kSmartMotion);                                                   
+    }
   }
 
 

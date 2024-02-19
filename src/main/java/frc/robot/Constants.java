@@ -58,6 +58,8 @@ public final class Constants
     public static final int kLauncherT = 18;
     public static final int kLauncherB = 19;
     public static final int kLauncherRotate = 16;
+    public static final double launcherMotorTopSpeed = 0.5;
+    public static final double launcherIndexerMotorSpeed = 1;
 
     public static final double intakeSpeedOut = 1.00;  //used?
     public static final double intakeSpeedIn = 0.50; //used?
@@ -92,6 +94,10 @@ public final class Constants
     public static final int kIntakeMotor = 14;
     public static final int kIndexerMotor = 15;
     public static final int kLauncherIndexerMotor = 17;
+    public static final double intakeSpeed = 1;
+    public static final double zeroSpeed = 0;
+    public static final double indexerSpeed = 0.1;
+    public static final double launcherIndexerSpeed = 0.12;
     
   }
 

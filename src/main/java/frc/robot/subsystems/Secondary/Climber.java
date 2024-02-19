@@ -17,9 +17,9 @@ import frc.robot.Constants.ClimberConstants;
 
 
 public class Climber extends SubsystemBase{
-    public static CANSparkMax m_climberMotorL;  
-    public static CANSparkMax m_climberMotorR;
-    public static RelativeEncoder m_climberEncoderR;
+    public CANSparkMax m_climberMotorL;  
+    public CANSparkMax m_climberMotorR;
+    public RelativeEncoder m_climberEncoderR;
     public static RelativeEncoder m_climberEncoderL;
     public static ProfiledPIDController m_climberPIDController;
     //public static Encoder ClimberEncoder;
@@ -37,7 +37,7 @@ public class Climber extends SubsystemBase{
     
 
     /**
-    * @param Climber
+    * @param ClimberCmd
     */
     public Climber(){
         // Declare the motors
@@ -47,8 +47,8 @@ public class Climber extends SubsystemBase{
         m_climberEncoderR = m_climberMotorR.getEncoder();
         m_climberEncoderL = m_climberMotorL.getEncoder();
         //m_climberFF = new ElevatorFeedforward(kS, kG, kV);
-        //m_climberMotorL.setInverted(true);
-        //m_climberMotorL.follow(m_climberMotorR);
+        // m_climberMotorL.setInverted(true);
+        // m_climberMotorL.follow(m_climberMotorR);
         //m_climberPIDController = new ProfiledPIDController(kP, kI, kD, m_constraints, kDt);
 
         /**
@@ -112,16 +112,16 @@ public class Climber extends SubsystemBase{
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("RClimber Enc Val", m_climberEncoderR.getPosition());
     SmartDashboard.putNumber("LClimber Enc Val", m_climberEncoderL.getPosition());
-    // if (RobotContainer.engineerXbox.getRawButton(2) == true){
-    //   m_climberMotorL.set(-.25);
-    //   m_climberMotorR.set(.25);
-    // } else if (RobotContainer.engineerXbox.getRawButton(3) == true){
-    //   m_climberMotorL.set(.25);
-    //   m_climberMotorR.set(-.25);
-    // } else{
-    //   m_climberMotorL.set(0);
-    //   m_climberMotorR.set(0);
-    // }
+    if (RobotContainer.engineerXbox.getRawButton(2) == true){
+      m_climberMotorL.set(-.25);
+      m_climberMotorR.set(.25);
+    } else if (RobotContainer.engineerXbox.getRawButton(3) == true){
+      m_climberMotorL.set(.25);
+      m_climberMotorR.set(-.25);
+    } else{
+      m_climberMotorL.set(0);
+      m_climberMotorR.set(0);
+    }
 
   }
 
