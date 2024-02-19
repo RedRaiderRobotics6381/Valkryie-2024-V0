@@ -62,7 +62,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
         //return this.runOnce(() -> launcherPIDController.setReference(speed, CANSparkMax.ControlType.kVelocity));
         //return this.run(() -> launcherPIDController.setReference(speed, CANSparkMax.ControlType.kVelocity));
-        return this.run(() -> m_launcherMotorTop.set(.75));
+        return this.run(() -> m_launcherMotorTop.set(.80));
 
         
         //armSubsystem.intakeMotorR.set(Constants.ArmConstants.gIntakeSpeed););

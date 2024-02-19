@@ -15,7 +15,7 @@ import frc.robot.RobotContainer;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    public static CANSparkMax intakeMotor;
+    public CANSparkMax intakeMotor;
     public CANSparkMax indexerMotor;
     public CANSparkFlex launcherIndexerMotor;
     public static SparkPIDController intakePIDController;
@@ -42,7 +42,11 @@ public class IntakeSubsystem extends SubsystemBase {
         // intakePIDController = intakeMotor.getPIDController();
         intakeMotor.enableVoltageCompensation(12.0);
         intakeMotor.setSmartCurrentLimit(60);
+        intakeMotor.setInverted(true);
+        indexerMotor.setInverted(true);
+        launcherIndexerMotor.setInverted(true);
         intakeMotor.burnFlash();  //Remove this after everything is up and running to save flash wear
+        
         
         //intakePIDController.setOutputRange(0, 1.0); //ArmConstants.armRotatekMinOutput, ArmConstants.armRotatekMaxOutput);
         
@@ -70,14 +74,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
   public void periodic() {
-    if (RobotContainer.engineerXbox.getRawButton(6) == false){   
-        intakeMotor.set(0);
-        indexerMotor.set(0);
-    }
+    // if (RobotContainer.engineerXbox.getRawButton(6) == false){   
+    //     intakeMotor.set(0);
+    //     indexerMotor.set(0);
+    // }
 
-    if (RobotContainer.engineerXbox.getRawButton(5) == false){   
-        launcherIndexerMotor.set(0);
-    }
+    // if (RobotContainer.engineerXbox.getRawButton(5) == false){   
+    //     launcherIndexerMotor.set(0);
+    // }
 
 
     // This method will be called once per scheduler run

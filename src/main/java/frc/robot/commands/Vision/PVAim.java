@@ -24,6 +24,7 @@ import edu.wpi.first.math.util.Units;
 
 public class PVAim extends Command
 {
+  private static final PhotonTrackedTarget target = null;
   //private double visionObject;
   //CANSparkMax m_LauncherRotateMotor = new CANSparkMax(LauncherConstants.kLauncherRotate, MotorType.kBrushless);
   public static double Launcher_Pitch;
@@ -65,75 +66,39 @@ public class PVAim extends Command
       var photonRes = Robot.camAprTgLow.getLatestResult();
       //System.out.println(photonRes.hasTargets());
       if (photonRes.hasTargets()) {
-        //Find the tag we want to chase
-        var targetOpt = photonRes.getTargets().stream()
-          .filter(t -> t.getFiducialId() == AprilTagConstants.speakerID) //4 Red & 7 Blue
-          .filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() != -1)
-          .findFirst();
-        if (targetOpt.isPresent()) {
-          var target = targetOpt.get();
-          Double TZ = target.getPitch();
-          SmartDashboard.putNumber("Angle to Target", TZ);
-          // var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
-          // boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
-          // PhotonTrackedTarget target = result.getBestTarget();
-          //int targetID = result
-          Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
-          Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
-                                                                                LauncherConstants.TARGET_Height_Meters, 
-                                                                                LauncherConstants.Camera1_pitch, 
-                                                                                Units.degreesToRadians(TZ))
-                                                                                + LauncherConstants.PV_TO_ROTATE_MOTOR;
-
-          Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
-            
-          launcherRotateSubsystem.rotatePosCommand(Launcher_Pitch);
-
-    var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
-    boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
-    PhotonTrackedTarget target = result.getBestTarget();
-    //int targetID = result.
-    
-    while (hasTargets == true) {
-      RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-      Double TZ = target.getPitch();
-      SmartDashboard.putNumber("Angle to Target", TZ);
-
-      Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
-
-
-      Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
-                                                                             LauncherConstants.TARGET_Height_Meters, 
-                                                                             LauncherConstants.LowCam_pitch, 
-                                                                             Units.degreesToRadians(result.getBestTarget().getPitch())) + LauncherConstants.PV_TO_ROTATE_MOTOR;
-
-     Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
-      
-
-      
-
-      if (visionObject == 0) {
-
-          RobotContainer.driverXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-          RobotContainer.engineerXbox.setRumble(XboxController.RumbleType.kLeftRumble, 0.25);
-          LEDs.setLED(.93);
-          
-          if (RobotContainer.engineerXbox.getRawButton(2) == true) {
-            launcherSubsystem.LauncherCmd(5000);
-            if (launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 4950) {
-              //intakeSubsystem.LaunchCmd(5000);
-            }
+          //Find the tag we want to chase
+          var targetOpt = photonRes.getTargets().stream()
+            .filter(t -> t.getFiducialId() == AprilTagConstants.speakerID) //4 Red & 7 Blue
+            .filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() != -1)
+            .findFirst();
+          if (targetOpt.isPresent()) {
+            var target = targetOpt.get();
+            Double TZ = target.getPitch();
+            SmartDashboard.putNumber("Angle to Target", TZ);
+            // var result = Robot.camAprTgLow.getLatestResult();  // Get the latest result from PhotonVision
+            // boolean hasTargets = result.hasTargets(); // Check if the latest result has any targets.
+            // PhotonTrackedTarget target = result.getBestTarget();
+            //int targetID = result
+            Double ID_HEIGHT = Units.inchesToMeters(57.13) - LauncherConstants.HEIGHT_TO_ROTATE_MOTOR;
+            Double LAUNCHER_TO_TOWER = PhotonUtils.calculateDistanceToTargetMeters(LauncherConstants.CAMERA_HEIGHT_METERS,
+                                                                                  LauncherConstants.TARGET_Height_Meters, 
+                                                                                  LauncherConstants.LowCam_pitch, 
+                                                                                  Units.degreesToRadians(TZ))
+                                                                                  + LauncherConstants.PV_TO_ROTATE_MOTOR;
+            Launcher_Pitch = Math.asin(ID_HEIGHT / Math.sqrt((ID_HEIGHT * ID_HEIGHT) + (LAUNCHER_TO_TOWER * LAUNCHER_TO_TOWER)));
+            launcherRotateSubsystem.rotatePosCommand(Launcher_Pitch);
           }
+
           // This is new target data, so recalculate the goal
           lastTarget = target;
-        }
-      }
-    } 
+        } 
+      } 
+    }
    
       // double translationVal = MathUtil.clamp(controller.calculate(swerveSubsystem.getPitch().getDegrees(), 0.0), -0.5,
     //                                        0.5);
     // swerveSubsystem.drive(new Translation2d(translationVal, 0.0), 0.0, true, false);
-  }
+  
 
   /**
    * <p>
