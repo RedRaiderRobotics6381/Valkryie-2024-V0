@@ -25,6 +25,7 @@ import frc.robot.commands.Vision.DriveToAmpCmd;
 import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
 import frc.robot.commands.Vision.DriveToStageCmd;
+import frc.robot.commands.Vision.PickUpNoteCmd;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
 import frc.robot.subsystems.Secondary.Climber;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
@@ -128,7 +129,7 @@ public class RobotContainer
 
 
     new JoystickButton(driverXbox, 8).onTrue((new InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton(driverXbox, 2).whileTrue(new DriveToObjectCmd(drivebase)); //changed to 1 from zero. 
+    new JoystickButton(driverXbox, 2).whileTrue(new PickUpNoteCmd(drivebase, intakeSubsystem, launcherRotateSubsystem)); //changed to 1 from zero. 
     new JoystickButton(driverXbox, 3).whileTrue(new DriveToSpeakerCmd(drivebase));
     new JoystickButton(driverXbox, 1).whileTrue(new DriveToAmpCmd(drivebase));
     new JoystickButton(driverXbox, 4).whileTrue(new DriveToStageCmd(drivebase));

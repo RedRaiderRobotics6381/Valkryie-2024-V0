@@ -10,7 +10,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
-import frc.robot.subsystems.Secondary.LauncherSubsystem;
 
 public class IntakeCmd extends Command {
 
