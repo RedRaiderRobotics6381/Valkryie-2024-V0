@@ -97,7 +97,7 @@ public class LauncherRotateSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rotator Enc Val", m_LauncherRotateEncoder.getPosition());
         if(RobotContainer.engineerXbox.getRightY() > 0.1 || RobotContainer.engineerXbox.getRightY() < -0.1){
           m_LauncherRotatePIDController.setReference((m_LauncherRotateEncoder.getPosition()) +
-                                                           (RobotContainer.engineerXbox.getRightY() * 20),
+                                                           (RobotContainer.engineerXbox.getRightY() * -20),
                                                            CANSparkMax.ControlType.kSmartMotion);                                                   
     }
   }

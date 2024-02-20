@@ -100,7 +100,7 @@ public class DriveToStageCmd extends Command
 
         // Transform the robot's pose to find the camera's pose
         var cameraPose = robotPose
-            .transformBy(new Transform3d(new Translation3d(-.512, 0.0, -0.558), new Rotation3d()));
+            .transformBy(new Transform3d(new Translation3d(-.475, 0.0, -0.558), new Rotation3d()));
 
         // Trasnform the camera's pose to the target's pose
         var camToTarget = target.getBestCameraToTarget();
