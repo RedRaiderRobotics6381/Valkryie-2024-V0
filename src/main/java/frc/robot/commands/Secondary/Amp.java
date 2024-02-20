@@ -11,7 +11,7 @@ import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
 
-public class OuttakeCmd extends Command {
+public class Amp extends Command {
   /** Creates a new Outtake. */
   
     private final IntakeSubsystem intakeSubsystem;
@@ -19,7 +19,7 @@ public class OuttakeCmd extends Command {
     private boolean hasNote = true;
   
   
-    public OuttakeCmd(IntakeSubsystem intakeSubsystem , LauncherSubsystem launcherSubsystem) {
+    public Amp(IntakeSubsystem intakeSubsystem , LauncherSubsystem launcherSubsystem) {
       this.intakeSubsystem = intakeSubsystem;
       this.launcherSubsystem = launcherSubsystem;
       
@@ -37,7 +37,7 @@ public class OuttakeCmd extends Command {
     public void execute() {
       if(Robot.sensorOuttake.get() == true || Robot.sensorIntake.get() == true){
         launcherSubsystem.m_launcherMotorTop.set(LauncherConstants.launcherMotorTopSpeed);
-        if(launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 3000) {
+        if(launcherSubsystem.m_launcherMotorTop.getEncoder().getVelocity() >= 900) {
           intakeSubsystem.launcherIndexerMotor.set(IntakeConstants.launcherIndexerSpeed);
           intakeSubsystem.indexerMotor.set(IntakeConstants.indexerSpeed);
         }

@@ -18,8 +18,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Secondary.Amp;
 import frc.robot.commands.Secondary.IntakeCmd;
-import frc.robot.commands.Secondary.OuttakeCmd;
+import frc.robot.commands.Secondary.Speaker;
 import frc.robot.commands.Vision.DriveToAmpCmd;
 import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
@@ -67,8 +68,8 @@ public class RobotContainer
     
     // Register Named Commands
 
-    //NamedCommands.registerCommand("Intake", intakeSubsystem.IntakeCmd());
-    NamedCommands.registerCommand("Shoot", launcherSubsystem.LauncherCmd(5000));
+    NamedCommands.registerCommand("Intake", new IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
+    NamedCommands.registerCommand("Shoot", new Speaker(intakeSubsystem, launcherSubsystem));
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     
@@ -136,9 +137,10 @@ public class RobotContainer
     new JoystickButton(engineerXbox, 1).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
     new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0
     //new JoystickButton(engineerXbox, 6).onTrue(intakeSubsystem.InitialIntakeCmd());
-    new JoystickButton(engineerXbox, 6).onTrue(new IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
+    new JoystickButton(engineerXbox, 6).onTrue(new Amp(intakeSubsystem, launcherSubsystem));
+    new JoystickButton(engineerXbox, 3).onTrue(new IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
     //new JoystickButton(engineerXbox, 5).onTrue(intakeSubsystem.LaunchIntakeCmd());
-    new JoystickButton(engineerXbox, 5).onTrue(new OuttakeCmd(intakeSubsystem, launcherSubsystem));
+    new JoystickButton(engineerXbox, 5).onTrue(new Speaker(intakeSubsystem, launcherSubsystem));
     //new JoystickButton(engineerXbox, 5).whileTrue(launcherSubsystem.LauncherCmd(.75));
     //new JoystickButton(engineerXbox, 3).whileTrue(climberSubsystem.climberInCmd()); 
     
