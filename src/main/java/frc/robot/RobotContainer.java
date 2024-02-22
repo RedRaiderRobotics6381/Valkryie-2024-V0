@@ -245,27 +245,27 @@ public class RobotContainer
       }
   }
 
-    // public double yawToSpeaker(){
-    //   double yawToSpeakerValue = 0.0;
-    //   PIDController zController = null;
-    //   try {
-    //     zController = new PIDController(0.025,0.0, 0.000);
-    //     zController.setTolerance(.5);
+    public double yawToSpeaker(){
+      double yawToSpeakerValue = 0.0;
+      PIDController zController = null;
+      try {
+        zController = new PIDController(0.025,0.0, 0.000);
+        zController.setTolerance(.5);
 
-    //     if (driverXbox.getRawButton(10) == false){  
-    //       yawToSpeakerValue = MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND);
-    //     } else{
-    //       if (Robot.camAprTgLow.getLatestResult().hasTargets() == true){
-    //         if (Robot.camAprTgLow.getLatestResult().getBestTarget().getFiducialId() == AprilTagConstants.speakerID){
-    //           yawToSpeakerValue = MathUtil.clamp(zController.calculate(Robot.camAprTgLow.getLatestResult().getBestTarget().getYaw(),0), -1.0 , 1.0);
-    //         }
-    //       }
-    //     }
-    //   } finally {
-    //     if (zController != null) {
-    //       zController.close();
-    //     }
-    //   }
-    //   return yawToSpeakerValue;
-    // }
+        if (driverXbox.getRawButton(10) == false){  
+          yawToSpeakerValue = MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND);
+        } else{
+          if (Robot.camAprTgLow.getLatestResult().hasTargets() == true){
+            if (Robot.camAprTgLow.getLatestResult().getBestTarget().getFiducialId() == AprilTagConstants.speakerID){
+              yawToSpeakerValue = MathUtil.clamp(zController.calculate(Robot.camAprTgLow.getLatestResult().getBestTarget().getYaw(),0), -1.0 , 1.0);
+            }
+          }
+        }
+      } finally {
+        if (zController != null) {
+          zController.close();
+        }
+      }
+      return yawToSpeakerValue;
+    }
   }
