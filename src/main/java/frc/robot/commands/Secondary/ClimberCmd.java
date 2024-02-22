@@ -5,16 +5,16 @@
 package frc.robot.commands.Secondary;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Secondary.Climber;
+import frc.robot.subsystems.Secondary.ClimberSubsystem;
 
 public class ClimberCmd extends Command {
   
-  private final Climber climber;
+  private final ClimberSubsystem climber;
   private boolean down = false;
   private boolean up = true;
   private boolean done = false;
 
-  public ClimberCmd(Climber climber) {
+  public ClimberCmd(ClimberSubsystem climber) {
     this.climber = climber;
   }
 

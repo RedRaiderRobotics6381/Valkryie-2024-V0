@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -15,7 +16,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Secondary.Amp;
@@ -24,10 +27,11 @@ import frc.robot.commands.Secondary.Speaker;
 import frc.robot.commands.Vision.DriveToAmpCmd;
 import frc.robot.commands.Vision.DriveToObjectCmd;
 import frc.robot.commands.Vision.DriveToSpeakerCmd;
+import frc.robot.commands.Vision.DriveToSpeakerCmd_B;
 import frc.robot.commands.Vision.DriveToStageCmd;
 import frc.robot.commands.Vision.PickUpNoteCmd;
 import frc.robot.subsystems.Secondary.LauncherSubsystem;
-import frc.robot.subsystems.Secondary.Climber;
+import frc.robot.subsystems.Secondary.ClimberSubsystem;
 import frc.robot.subsystems.Secondary.IntakeSubsystem;
 import frc.robot.subsystems.Secondary.LauncherRotateSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -57,7 +61,7 @@ public class RobotContainer
   LauncherSubsystem launcherSubsystem = new LauncherSubsystem();
   LauncherRotateSubsystem launcherRotateSubsystem = new LauncherRotateSubsystem();
   IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  Climber climberSubsystem = new Climber();
+  ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -87,6 +91,14 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND) *
                                                              Constants.Drivebase.Max_Speed_Multiplier,
         () -> MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND) );
+    
+        // Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
+        // () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND) *
+        //                                                      Constants.Drivebase.Max_Speed_Multiplier,
+        // () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND) *
+        //                                                      Constants.Drivebase.Max_Speed_Multiplier,
+        // () -> yawToSpeaker());
+      
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND) *
@@ -129,19 +141,31 @@ public class RobotContainer
 
 
     new JoystickButton(driverXbox, 8).onTrue((new InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton(driverXbox, 2).whileTrue(new PickUpNoteCmd(drivebase, intakeSubsystem, launcherRotateSubsystem)); //changed to 1 from zero. 
-    new JoystickButton(driverXbox, 3).whileTrue(new DriveToSpeakerCmd(drivebase));
+    new JoystickButton(driverXbox, 2).whileTrue(new PickUpNoteCmd(drivebase, intakeSubsystem, launcherRotateSubsystem));
+    //new JoystickButton(driverXbox, 3).whileTrue(new DriveToSpeakerCmd(drivebase));
+    new JoystickButton(driverXbox, 3).whileTrue(new DriveToSpeakerCmd_B(drivebase));
     new JoystickButton(driverXbox, 1).whileTrue(new DriveToAmpCmd(drivebase));
     new JoystickButton(driverXbox, 4).whileTrue(new DriveToStageCmd(drivebase));
 
 
-    new JoystickButton(engineerXbox, 1).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
-    new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //60.0
+    new JoystickButton(engineerXbox, 1).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posOuttake));
+    new JoystickButton(engineerXbox, 3).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault)); //190.0 // DO NOT RUN AT 190. LAUNCHER WILL BREAK!!
+    new JoystickButton(engineerXbox, 2).onTrue(new Amp(intakeSubsystem, launcherSubsystem));
+    new JoystickButton(engineerXbox, 4).onTrue(new Speaker(intakeSubsystem, launcherSubsystem));
+    //new JoystickButton(engineerXbox, 4).onTrue(new  IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
+    
+    
+    new JoystickButton(engineerXbox, 5).onTrue(new IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
+    
+    new POVButton(engineerXbox, 0).onTrue(new InstantCommand(climberSubsystem::climbCmd, climberSubsystem));
+    new POVButton(engineerXbox, 180).onTrue(new InstantCommand(climberSubsystem::lowerCmd, climberSubsystem));
+
+    //new JoystickButton(engineerXbox, 2).onTrue(new InstantCommand(climberSubsystem::lowerCmd, climberSubsystem));
+    
+
+    //new JoystickButton(engineerXbox, 4).onTrue(launcherRotateSubsystem.rotatePosCommand(LauncherConstants.posDefault));
     //new JoystickButton(engineerXbox, 6).onTrue(intakeSubsystem.InitialIntakeCmd());
-    new JoystickButton(engineerXbox, 6).onTrue(new Amp(intakeSubsystem, launcherSubsystem));
-    new JoystickButton(engineerXbox, 3).onTrue(new IntakeCmd(intakeSubsystem, launcherRotateSubsystem));
     //new JoystickButton(engineerXbox, 5).onTrue(intakeSubsystem.LaunchIntakeCmd());
-    new JoystickButton(engineerXbox, 5).onTrue(new Speaker(intakeSubsystem, launcherSubsystem));
     //new JoystickButton(engineerXbox, 5).whileTrue(launcherSubsystem.LauncherCmd(.75));
     //new JoystickButton(engineerXbox, 3).whileTrue(climberSubsystem.climberInCmd()); 
     
@@ -220,4 +244,28 @@ public class RobotContainer
         lastTime = Timer.getFPGATimestamp();
       }
   }
-}
+
+    // public double yawToSpeaker(){
+    //   double yawToSpeakerValue = 0.0;
+    //   PIDController zController = null;
+    //   try {
+    //     zController = new PIDController(0.025,0.0, 0.000);
+    //     zController.setTolerance(.5);
+
+    //     if (driverXbox.getRawButton(10) == false){  
+    //       yawToSpeakerValue = MathUtil.applyDeadband(-driverXbox.getRawAxis(4), OperatorConstants.RIGHT_X_DEADBAND);
+    //     } else{
+    //       if (Robot.camAprTgLow.getLatestResult().hasTargets() == true){
+    //         if (Robot.camAprTgLow.getLatestResult().getBestTarget().getFiducialId() == AprilTagConstants.speakerID){
+    //           yawToSpeakerValue = MathUtil.clamp(zController.calculate(Robot.camAprTgLow.getLatestResult().getBestTarget().getYaw(),0), -1.0 , 1.0);
+    //         }
+    //       }
+    //     }
+    //   } finally {
+    //     if (zController != null) {
+    //       zController.close();
+    //     }
+    //   }
+    //   return yawToSpeakerValue;
+    // }
+  }

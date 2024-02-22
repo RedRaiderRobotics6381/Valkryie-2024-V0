@@ -1,14 +1,11 @@
 package frc.robot.subsystems.Secondary;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class LauncherSubsystem extends SubsystemBase {
@@ -62,7 +59,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
         //return this.runOnce(() -> launcherPIDController.setReference(speed, CANSparkMax.ControlType.kVelocity));
         //return this.run(() -> launcherPIDController.setReference(speed, CANSparkMax.ControlType.kVelocity));
-        return this.run(() -> m_launcherMotorTop.set(.80));
+        return this.run(() -> m_launcherMotorTop.set(.8));
 
         
         //armSubsystem.intakeMotorR.set(Constants.ArmConstants.gIntakeSpeed););
