@@ -3,6 +3,8 @@ package frc.robot.subsystems.Secondary;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
@@ -54,7 +56,6 @@ public class ClimberSubsystem extends SubsystemBase{
         m_climberEncoderR = m_climberMotorR.getEncoder();
         m_climberEncoderL = m_climberMotorL.getEncoder();
         m_climberMotorL.setInverted(true);
-        m_climberEncoderL.setInverted(true);
         m_climberEncoderR.setPositionConversionFactor(.1791); 
         m_climberEncoderL.setPositionConversionFactor(.1791);
 
@@ -72,6 +73,7 @@ public class ClimberSubsystem extends SubsystemBase{
         m_climberMotorR.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 13);
         m_climberMotorR.enableVoltageCompensation(12.0);
         m_climberMotorR.setSmartCurrentLimit(40);
+        m_climberMotorR.setIdleMode(IdleMode.kBrake);
 
         m_climberMotorL.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
         m_climberMotorL.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
@@ -79,6 +81,7 @@ public class ClimberSubsystem extends SubsystemBase{
         m_climberMotorL.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 13);
         m_climberMotorL.enableVoltageCompensation(12.0);
         m_climberMotorL.setSmartCurrentLimit(40);
+        m_climberMotorL.setIdleMode(IdleMode.kBrake);
 
         m_climberMotorR.burnFlash(); //Remove this after everything is up and running to save flash wear
         m_climberMotorL.burnFlash(); //Remove this after everything is up and running to save flash wear

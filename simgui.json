@@ -27,6 +27,15 @@
     "transitory": {
       "SmartDashboard": {
         "open": true
+      },
+      "photonvision": {
+        "camAprTgLow": {
+          "open": true
+        },
+        "camObj": {
+          "open": true
+        },
+        "open": true
       }
     }
   },
@@ -42,7 +51,6 @@
         "open": true
       },
       "open": true
-    },
-    "visible": true
+    }
   }
 }
